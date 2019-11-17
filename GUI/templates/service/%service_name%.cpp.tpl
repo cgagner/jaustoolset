@@ -1,6 +1,7 @@
 %copyright%
 
 #include "%service_namespace%/%service_name%.h"
+#include <mutex>
 
 using namespace JTS;
 
@@ -42,18 +43,14 @@ void %service_name%::run()
  */
 bool %service_name%::processTransitions(InternalEvent* ie)
 {
-        bool done = false;
-
    // Since this function can be called from multiple threads,
    // we use a mutex to ensure only one state transition is
    // active at a time.
-   mutex.lock();
+   const std::lock_guard<DeVivo::Junior::JrMutex> lock(mutex);
 
 			// Invoke the FSM transition for this event.
 %transition_calls%			 
-leave:
-   mutex.unlock();
-   return done;
+   return false;
 }
 
 
@@ -63,18 +60,14 @@ leave:
  */
 bool %service_name%::defaultTransitions(InternalEvent* ie)
 {
-   bool done = false;
-
    // Since this function can be called from multiple threads,
    // we use a mutex to ensure only one state transition is
    // active at a time.
-   mutex.lock();
+   const std::lock_guard<DeVivo::Junior::JrMutex> lock(mutex);
 
 			// Invoke the FSM transition for this event.
 %default_transition_calls%	
-leave:
-   mutex.unlock();
-   return done;
+   return false;
 }
 
 

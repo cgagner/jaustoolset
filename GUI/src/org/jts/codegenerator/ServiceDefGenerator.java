@@ -599,7 +599,7 @@ public class ServiceDefGenerator
 					libs.add( parentList.get(i-1).namespace + "/lib/" + parentList.get(i-1).name );
 				
                 /// Generate the Sconstruct File
-                Util.writeContents(new File(srcDir + "/Sconstruct"), sconGen.generateLibrary(new File(srcDir), Util.upperCaseFirstLetter(serviceName), libs));
+                Util.writeContents(new File(srcDir + "/Sconstruct"), sconGen.generateLibrary(new File(srcDir), Util.upperCaseFirstLetter(serviceName), libs, true));
             }
             catch (Exception e)
             {

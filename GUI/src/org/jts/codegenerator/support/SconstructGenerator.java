@@ -50,14 +50,26 @@ public class SconstructGenerator
 	{
 	}
 
-	/**
+        /**
 	 * 
 	 * @param outDir
 	 * @param name
 	 * @param libs	List<String> will fully qualified library names
 	 * @return
 	 */
-	public String generateLibrary(File outDir, String name, List<String> libs)
+        public String generateLibrary(File outDir, String name, List<String> libs) {
+            return generateLibrary(outDir, name, libs, false);
+        }
+        
+	/**
+	 * 
+	 * @param outDir
+	 * @param name
+	 * @param libs	List<String> will fully qualified library names
+         * @param useCpp11 True to indicate using C++11
+	 * @return
+	 */
+	public String generateLibrary(File outDir, String name, List<String> libs, boolean useCpp11)
 	{
 		String fileSep = System.getProperty("file.separator");
 		List<String> libPaths = new ArrayList<String>();
@@ -124,6 +136,9 @@ public class SconstructGenerator
 			buf.append("'" + lib + "'");
 		}
 		buf.append("])").append(System.getProperty("line.separator"));
+                if(useCpp11) {
+                    buf.append("env.AppendUnique(CPPFLAGS = \"-std=c++11\")").append(System.getProperty("line.separator"));
+                }
 		buf.append("env.Install( env['INSTALL_LIB'], lib )").append(System.getProperty("line.separator"));
 		buf.append("env.Install( env['BINPATH'], lib )").append(System.getProperty("line.separator"));
     	return buf.toString();
@@ -277,6 +292,7 @@ public class SconstructGenerator
 		buf.append("\tenv.Append( LINKFLAGS = ['-lpthread', '-lrt'] )").append(System.getProperty("line.separator"));
 		buf.append("\tenv.Append( CPPFLAGS = ['-g', '-Wno-write-strings'])").append(System.getProperty("line.separator"));
         buf.append("\textra_libs = ['pthread', 'rt']").append(System.getProperty("line.separator"));
+        
 		buf.append("Export('env')").append(System.getProperty("line.separator"));
 		buf.append(System.getProperty("line.separator"));			
 		
