@@ -37,12 +37,14 @@ import org.jts.jsidl.binding.*;
 import org.jts.codegenerator.support.*;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,6 +114,55 @@ public class ServiceDefGenerator
                 }
 	}
 
+        /**
+         * Find the ServiceDef in sSet with the specified id.
+         * @param id
+         * @return ServiceDef in sSet with the specified id.
+         */
+        ServiceDef findService(String id) {
+            for(ServiceDef s : sSet.getServiceDef()) {
+                if(s.getId().equals(id)) {
+                    return s;
+                }
+            }
+            return null;
+        }
+        
+        /**
+         * Check if the specified object is in the list of objects.
+         * @param objectSet InputSet or OutputSet
+         * @param input MessageDef or EventDef
+         * @return 
+         */
+        boolean isInSet(List<Object> objectSet, Object input){
+            if(objectSet == null || input == null) {
+                return false;
+            }
+            
+            if(!(input instanceof MessageDef || input instanceof EventDef)){
+                return false;
+            }
+            
+            boolean isMessage = (input instanceof MessageDef);
+            
+            for(Object i : objectSet){
+                if(isMessage) {
+                    if(i instanceof MessageDef) {
+                        if(((MessageDef)i).equals(input)) {
+                            return true;
+                        }
+                    }
+                } else {
+                    if(i instanceof EventDef) {
+                        if(((EventDef)i).equals(input)) {
+                            return true;
+                        }
+                    }
+                }   
+            }
+            return false;
+        }
+        
 
         /*
          * @param outDir
@@ -157,10 +208,100 @@ public class ServiceDefGenerator
                 ConstantsGenerator cGen = new ConstantsGenerator(codeType, sDef.getDeclaredConstSet());
                 cGen.run(outDir);
 
+                // Use TreeSet to order the messages/events by name - This makes
+                // the include sections consistent
+                TreeSet<String> childMessages = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                
+                TreeSet<String> importedMessages = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                TreeSet<String> importedMessageSets = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                HashMap<MessageDef, ServiceDef> messageOwners = new HashMap<MessageDef, ServiceDef>();
+                
+                // Build a map of message owners, starting with clients, then parent.
+                for (ClientOf client : sDef.getReferences().getClientOf()) {
+                    if (client != null) {
+                        ServiceDef s = findService(client.getId());
+                        if (s != null) {
+                            for (Object o : s.getMessageSet().getInputSet().getMessageDefOrDeclaredMessageDef()) {
+                                if (o instanceof MessageDef) {
+                                    messageOwners.put((MessageDef) o, s);
+                                }
+                            }
+                            for (Object o : s.getMessageSet().getOutputSet().getMessageDefOrDeclaredMessageDef()) {
+                                if (o instanceof MessageDef) {
+                                    messageOwners.put((MessageDef) o, s);
+                                }
+                            }
+                        }
+                    }
+                }
+                ServiceDef parentService = null;
+                String parentNamespace = "";
+                if (sDef.getReferences().getInheritsFrom() != null) {
+                    parentService = findService(sDef.getReferences().getInheritsFrom().getId());
+                    if (parentService != null) {
+                        parentNamespace = CppCode.makeNamespace(parentService.getId(), parentService.getVersion());
+                        for (Object o : parentService.getMessageSet().getInputSet().getMessageDefOrDeclaredMessageDef()) {
+                            if (o instanceof MessageDef) {
+                                messageOwners.put((MessageDef) o, parentService);
+                            }
+                        }
+                        for (Object o : parentService.getMessageSet().getOutputSet().getMessageDefOrDeclaredMessageDef()) {
+                            if (o instanceof MessageDef) {
+                                messageOwners.put((MessageDef) o, parentService);
+                            }
+                        }
+                    }
+                }
+                
+                MessageSet childMessageSet = sDef.getMessageSet();
+                if (!messageOwners.isEmpty()) {
+
+                    childMessageSet = new MessageSet();
+                    childMessageSet.setInputSet(new InputSet());
+                    childMessageSet.setOutputSet(new OutputSet());
+
+                    for (Object input : sDef.getMessageSet().getInputSet().getMessageDefOrDeclaredMessageDef()) {
+                        if(input instanceof MessageDef && messageOwners.containsKey((MessageDef)input)) {
+                            ServiceDef owner = messageOwners.get((MessageDef)input);
+                            String ns = CppCode.makeNamespace(owner.getId(), owner.getVersion());
+                            importedMessages.add(ns + "::" + ((MessageDef)input).getName());
+                            importedMessageSets.add(ns);
+                        } else {
+                            childMessageSet.getInputSet().getMessageDefOrDeclaredMessageDef().add(input);
+                            childMessages.add(((MessageDef)input).getName());
+                        }
+                    }
+                    
+                    for (Object output : sDef.getMessageSet().getOutputSet().getMessageDefOrDeclaredMessageDef()) {
+                        if(output instanceof MessageDef && messageOwners.containsKey((MessageDef)output)) {
+                            ServiceDef owner = messageOwners.get((MessageDef)output);
+                            String ns = CppCode.makeNamespace(owner.getId(), owner.getVersion());
+                            importedMessages.add(ns + "::" + ((MessageDef)output).getName());
+                            importedMessageSets.add(ns);
+                        } else {
+                            childMessageSet.getOutputSet().getMessageDefOrDeclaredMessageDef().add(output);
+                            childMessages.add(((MessageDef)output).getName());
+                        }
+                    }
+                } else {
+                    // No parent messages.. Still need to build the childMessages tree.
+                    for (Object input : sDef.getMessageSet().getInputSet().getMessageDefOrDeclaredMessageDef()) {
+                        if(input instanceof MessageDef ) {
+                            childMessages.add(((MessageDef)input).getName());
+                        }
+                    }
+                    
+                    for (Object output : sDef.getMessageSet().getOutputSet().getMessageDefOrDeclaredMessageDef()) {
+                        if(output instanceof MessageDef) {
+                            childMessages.add(((MessageDef)output).getName());
+                        }
+                    }
+                }
+                
                 /*
                  * Generate the MessageSet
                  */
-                MessageSetGenerator msGen = new MessageSetGenerator(codeType, sDef.getMessageSet());
+                MessageSetGenerator msGen = new MessageSetGenerator(codeType, childMessageSet);
                 msGen.run(namespace, outDir);
 
                 /// Move the files
@@ -172,17 +313,30 @@ public class ServiceDefGenerator
                 incBuf = new StringBuffer();
                 tempDir = new File(includeDir + "/Messages");
                 tempDir.mkdir();
-                for (File src : tempDir.listFiles())
-                {
-                    if (!src.isDirectory() && msgList.contains(src.getName().substring(0, src.getName().length() - 2)))
-                    {
-                        incBuf.append("#include \"" + src.getName() + "\"").append(System.getProperty("line.separator"));
-                    }
-                }
-
-
-                /// Create the MessageSet.h file
+                
                 incName = "MessageSet";
+                // Loop through all of the child messages and add an include for each one.
+                for(String messageName : childMessages) {
+                    incBuf.append("#include \"" + messageName + ".h\"").append(System.getProperty("line.separator"));
+                }
+                
+                // Add all of the parent's messages in the child's namespace with 'using'
+                if (!importedMessages.isEmpty()) {
+                    for(String importedSet : importedMessageSets) {
+                        incBuf.append("#include \"" + importedSet + "/Messages/" + incName + ".h\"").append(System.getProperty("line.separator"));
+                    }
+                    
+                    incBuf.append(System.getProperty("line.separator"));
+                    incBuf.append("namespace " + namespace).append(System.getProperty("line.separator")).append("{").append(System.getProperty("line.separator"));
+
+                    for(String importedMessage : importedMessages) {
+                        incBuf.append("  using " + importedMessage + ";").append(System.getProperty("line.separator"));
+                    }
+                    
+                    incBuf.append("}").append(System.getProperty("line.separator"));
+                }
+                
+                /// Create the MessageSet.h file
                 msgSet = new File(includeDir + "/Messages/" + incName + ".h");
                 strBuf = new StringBuffer();
                 strBuf.append("#ifndef " + namespace.toUpperCase() + "_" + incName.toUpperCase()).append(System.getProperty("line.separator"));
@@ -194,6 +348,25 @@ public class ServiceDefGenerator
                 Util.writeContents(msgSet, strBuf.toString());
 
 
+                TreeSet<String> parentEvents = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                TreeSet<String> childEvents = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);                
+                for (Object internalEvent : sDef.getInternalEventsSet().getEventDefOrDeclaredEventDef()) {
+                    if(internalEvent instanceof EventDef) {
+                        String eventName = ((EventDef) internalEvent).getName();
+                        // Don't include Send and Receive Internal Events.
+                        // Those are part of the JTS Framework.
+                        if(eventName.equalsIgnoreCase("Send") || eventName.equalsIgnoreCase("Receive")) {
+                            continue;
+                        }
+                        if(parentService != null && isInSet(parentService.getInternalEventsSet().getEventDefOrDeclaredEventDef(), internalEvent)) {
+                            parentEvents.add(eventName);
+                        } else {
+                            childEvents.add(eventName);
+                        }
+                    }
+                }
+                
+                
                 /*
                  * Generate the InternalEventSet
                  */
@@ -205,16 +378,27 @@ public class ServiceDefGenerator
                 incBuf = new StringBuffer();
                 tempDir = new File(includeDir + "/InternalEvents");
                 tempDir.mkdir();
-                for (File src : tempDir.listFiles())
-                {
-                    if (!src.isDirectory() && ieList.contains(src.getName().substring(0, src.getName().length() - 2)))
-                    {
-                        incBuf.append("#include \"" + src.getName() + "\"").append(System.getProperty("line.separator"));
+                incName = "InternalEventsSet";
+                
+                // Loop through all of the child events and add an include for each one.
+                for(String eventName : childEvents) {
+                    incBuf.append("#include \"" + eventName + ".h\"").append(System.getProperty("line.separator"));
+                }
+                
+                // Add all of the parent's events in the child's namespace with 'using'
+                if (!parentEvents.isEmpty()) {
+                    incBuf.append("#include \"" + parentNamespace + "/InternalEvents/" + incName + ".h\"").append(System.getProperty("line.separator"));
+
+                    incBuf.append(System.getProperty("line.separator"));
+                    incBuf.append("namespace " + namespace).append(System.getProperty("line.separator")).append("{").append(System.getProperty("line.separator"));
+
+                    for(String eventName : parentEvents) {
+                        incBuf.append("  using " + parentNamespace + "::" + eventName + ";").append(System.getProperty("line.separator"));
                     }
+                    incBuf.append("}").append(System.getProperty("line.separator"));
                 }
 
                 /// Create the InternalEventsSet.h file
-                incName = "InternalEventsSet";
                 msgSet = new File(includeDir + "/InternalEvents/" + incName + ".h");
                 strBuf = new StringBuffer();
                 strBuf.append("#ifndef " + namespace.toUpperCase() + "_" + incName.toUpperCase()).append(System.getProperty("line.separator"));
@@ -249,7 +433,7 @@ public class ServiceDefGenerator
                     Vector<Reference> parentList = new Vector<Reference>();
                     org.jts.codegenerator.support.InheritanceHelper.getParentServiceList( 
                                        codeType, sSet, sDef, parentList);
-                                       
+                                                         
                     // For each parent reference, add an include and constructor pointer
                     for (Reference ref : parentList)
                     {                   

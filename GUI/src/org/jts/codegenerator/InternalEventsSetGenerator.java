@@ -121,21 +121,44 @@ public class InternalEventsSetGenerator
                 	isReceiveEvent = true;
                 }
                 
-                if( ( ( inheritsFromTransport ) || ( isTransport ) ) &&
-                    ( isSendEvent || isReceiveEvent ) )
-                {
-					// Ignore Send and Receive since they are defined in the framework.
-					// The generated code will include Transport_Aliases_1_x.h that will map
-					// Send and Receive to either the 5710 or 5710A definition, depending on which
-					// transport version was used.
-				}
-				else
-				{
-					// Generate internal event normally
-                    EventDefGenerator eventDefGen = new EventDefGenerator(codeType, eventDef);
-                    eventDefGen.run(namespace, outDir);
-                    eventDefIdList.add(eventDefGen.getIdConstant());
-                    
+                if (((inheritsFromTransport) || (isTransport))
+                        && (isSendEvent || isReceiveEvent)) {
+                    // Ignore Send and Receive since they are defined in the framework.
+                    // The generated code will include Transport_Aliases_1_x.h that will map
+                    // Send and Receive to either the 5710 or 5710A definition, depending on which
+                    // transport version was used.
+                } else {
+                    // Generate internal event normally
+
+                    if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+                        
+                        // For C++, only run the event generator if the event
+                        // is not defined by the parent service.
+                        
+                        boolean isInherited = false;
+                        for (ServiceDef s : sSet.getServiceDef()) {
+                            if (sDef.getReferences().getInheritsFrom() != null && s.getId().equals(sDef.getReferences().getInheritsFrom().getId())) {
+                                for(Object o : s.getInternalEventsSet().getEventDefOrDeclaredEventDef()) {
+                                    if(o instanceof EventDef && ((EventDef)o).equals(eventDef)) {
+                                        isInherited = true;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        
+                        if (!isInherited) {
+                            EventDefGenerator eventDefGen = new EventDefGenerator(codeType, eventDef);
+                            eventDefGen.run(namespace, outDir);
+                        }                        
+                        eventDefIdList.add(eventDef.getName() + "::Id");
+                    } else {
+                        EventDefGenerator eventDefGen = new EventDefGenerator(codeType, eventDef);
+                        eventDefGen.run(namespace, outDir);
+                        eventDefIdList.add(eventDefGen.getIdConstant());
+                    }
+
                     internalEventList.add(eventDef.getName());
                 }
             }
