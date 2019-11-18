@@ -86,7 +86,7 @@ public class RecordGenerator
         methodCode = new Vector<String>();
         methodParam = new Vector<String>();
         shortClassName = record.getName();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             varName = CppCode.getVariableName(shortClassName);
         }
@@ -111,7 +111,7 @@ public class RecordGenerator
         methodCode = new Vector<String>();
         methodParam = new Vector<String>();
         shortClassName = record.getName();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             varName = CppCode.getVariableName(shortClassName);
         }
@@ -136,7 +136,7 @@ public class RecordGenerator
      */
     public void run(String parentName, int pvIndex, CodeLines code, String messageId)
     {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             parentClassName = parentName;
             fullClassName = parentClassName + "::" + shortClassName;
@@ -257,7 +257,7 @@ public class RecordGenerator
                 // set the constructor of the field to automatically set the variables to the
                 // message id value.  This can be overwritten at run-time.
                 String ffValue = null;
-                if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     if ((messageId != null) && (CppCode.getVariableType(fixedField.getFieldType()).equals("jUnsignedShortInteger")))
                     {
@@ -356,7 +356,7 @@ public class RecordGenerator
                 throw new CodeGeneratorException("RecordGenerator: Unknown Field Encountered: " + field.getClass().getName());
             }
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 variableName = CppCode.getVariableName(fieldName);
             }
@@ -395,7 +395,7 @@ public class RecordGenerator
                     code.equalLines.add("");
                 }
 
-                if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.assignmentLines.add(variableName + " = value." + variableName + ";");
                     code.equalLines.add("if (" + variableName + " != value." + variableName + ")");
@@ -421,7 +421,7 @@ public class RecordGenerator
                 {
                     code.notEqualLines.add("");
                 }
-                if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.notEqualLines.add("if (" + variableName + " == value." + variableName + ")");
                 }
@@ -451,7 +451,7 @@ public class RecordGenerator
         code.notEqualLines.add("return true;");
 
         /// Add a class wrapper around the generated code
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             CppCode.addClassWrapper(fullClassName, code);
         }
@@ -479,7 +479,7 @@ public class RecordGenerator
          */
 
         // create variable
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /*
              * Create framework for parent reference
@@ -534,7 +534,7 @@ public class RecordGenerator
         methodCode.add("size += " + varName + ".getSize();");
         if (record.isOptional())
         {
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
             }
@@ -558,7 +558,7 @@ public class RecordGenerator
          */
         if (record.isOptional())
         {
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
                 methodCode.clear();
@@ -594,7 +594,7 @@ public class RecordGenerator
 
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(varName + ".encode(bytes + pos);");
             methodCode.add("pos += " + varName + ".getSize();");
@@ -634,7 +634,7 @@ public class RecordGenerator
          *	pos += m_Record1.getSize();
          */
         methodCode.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(varName + ".decode(bytes + pos);");
             methodCode.add("pos += " + varName + ".getSize();");
@@ -671,7 +671,7 @@ public class RecordGenerator
         methodParam.clear();
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName + "* const", "get", shortClassName, methodParam, false));
 
@@ -697,7 +697,7 @@ public class RecordGenerator
         ///  Generate setMethod Declaration and Definition
         methodParam.clear();
         methodCode.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("const " + shortClassName + " &value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", shortClassName, methodParam, false));
@@ -774,7 +774,7 @@ public class RecordGenerator
             code.equalLines.add("if (!this.get" + varName.substring(varName.indexOf(CSharpCode.VARIABLE_PREFIX)+2)
                     + "().isEqual(value.get" + varName.substring(varName.indexOf(CSharpCode.VARIABLE_PREFIX)+2) + "()))");
         }
-        else if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        else if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.equalLines.add("if (" + varName + " != value." + varName + ")");
         }
@@ -800,7 +800,7 @@ public class RecordGenerator
             code.notEqualLines.add("if (!this.get" + varName.substring(varName.indexOf(CSharpCode.VARIABLE_PREFIX)+2)
                     + "().notEquals(value.get" + varName.substring(varName.indexOf(CSharpCode.VARIABLE_PREFIX)+2) + "()))");
         }
-        else if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        else if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.notEqualLines.add("if (" + varName + " == value." + varName + ")");
         }
@@ -827,7 +827,7 @@ public class RecordGenerator
          */
 
         // create variable
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /*
              * Create framework for parent reference
@@ -886,7 +886,7 @@ public class RecordGenerator
          * GetSize method
          * only add size of array if optional is true
          */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add("size += sizeof(" + CppCode.getVariableType(countFieldType) + ");");
             methodCode.add("for (int i = 0; i < " + varName + ".size(); i++)");
@@ -935,7 +935,7 @@ public class RecordGenerator
          */
         if (record.isOptional())
         {
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
                 methodCode.clear();
@@ -971,7 +971,7 @@ public class RecordGenerator
          */
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /* First set the count */
             methodCode.add(CppCode.getVariableType(countFieldType) + " size = (" + CppCode.getVariableType(countFieldType) + ") " + varName + ".size();");
@@ -1034,7 +1034,7 @@ public class RecordGenerator
          */
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /* pull the count */
             methodCode.add(CppCode.getVariableType(countFieldType) + " size;");
@@ -1101,7 +1101,7 @@ public class RecordGenerator
         /// getNumberOfElements()
         methodCode.clear();
         methodParam.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration("unsigned int", "get", "NumberOfElements", null, true));
             methodCode.add("return (unsigned int) " + varName + ".size();");
@@ -1124,7 +1124,7 @@ public class RecordGenerator
         /// getElement(index)
         methodCode.clear();
         methodParam.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("unsigned int " + "index");
             code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName + "* const", "get", "Element", methodParam, false));
@@ -1150,7 +1150,7 @@ public class RecordGenerator
         /// setElement(index,value)
         methodCode.clear();
         methodParam.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("unsigned int " + "index");
             methodParam.add("const " + shortClassName + " &value");
@@ -1209,7 +1209,7 @@ public class RecordGenerator
         /// addElement(value)
         methodCode.clear();
         methodParam.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("const " + shortClassName + " &value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "add", "Element", methodParam, false));
@@ -1250,7 +1250,7 @@ public class RecordGenerator
         /// deleteElement(index)
         methodCode.clear();
         methodParam.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("unsigned int " + "index");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "delete", "Element", methodParam, false));
@@ -1293,7 +1293,7 @@ public class RecordGenerator
         /// deleteLastElement()
         methodCode.clear();
         methodParam.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "delete", "LastElement", methodParam, false));
             methodCode.add(varName + ".pop_back();");
@@ -1318,7 +1318,7 @@ public class RecordGenerator
         /// Overload the operator=
         /// Add code to the assignment lines of code
         methodCode.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(varName + ".clear();");
             methodCode.add("");
@@ -1371,7 +1371,7 @@ public class RecordGenerator
         /// Overload operator==
         /// Add code for checking equality
         methodCode.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add("if (" + varName + ".size() !=  value." + varName + ".size())");
             methodCode.add("{");
@@ -1438,7 +1438,7 @@ public class RecordGenerator
     private void generateVectorOverloadNotEqualMethod(CodeLines code, int pvIndex)
     {
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /// Overload operator!=
             /// Add code checking inequality

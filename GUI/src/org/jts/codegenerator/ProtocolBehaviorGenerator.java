@@ -114,7 +114,7 @@ public class ProtocolBehaviorGenerator {
                 generateFlattenedStateMachine(flattenedStates, sm, sd, ss, st_start, wrapperList);
             }
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 // classString
                 localBuffer.append("%class " + sm.getName() + System.getProperty("line.separator"));
 
@@ -199,7 +199,7 @@ public class ProtocolBehaviorGenerator {
                 transportVersion = top.getVersion();
 
             // generate the action and guard functions for the current state machine
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 generateOwnerAndImplFilesCPP(sm, sd, ss, transportVersion, outDir, namespace, flattenedStates);
             } else if (codeType == CodeLines.CodeType.JAVA) {
                 generateOwnerAndImplFilesJava(sm, sd, ss, transportVersion, outDir, namespace, flattenedStates);
@@ -449,7 +449,7 @@ public class ProtocolBehaviorGenerator {
         }
 
         String excstr = "";
-        if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             excstr = "java -jar " + smcPath + " -c++ -g -d src/" + namespace + " -headerd include/" + namespace + " " + stateMachineName + ".sm";
         } else if (m_codeType == CodeLines.CodeType.JAVA) {
             // Generate SM files and copy library to proper directory.
@@ -1305,7 +1305,7 @@ public class ProtocolBehaviorGenerator {
         for (Iterator<String> it = actionOrSendActionList.iterator(); it.hasNext();) {
             String method = it.next();
 
-            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 virtualActionMethods.append("\tvirtual void " + method + "=0;");
                 virtualActionMethods.append(System.getProperty("line.separator"));
 
@@ -1530,7 +1530,7 @@ public class ProtocolBehaviorGenerator {
             // method could have been defined as negation, parse "!" from string
             method = method.replace("!", "").trim();
 
-            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS) 
+            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11) 
 			{
                 // Eliminate references from function name, e.g. management.accessCtrl.isControllingClient
                 if (method.lastIndexOf(".") != -1) {
@@ -1586,7 +1586,7 @@ public class ProtocolBehaviorGenerator {
         for (Iterator<Object> it = startStateEntryActions.iterator(); it.hasNext();) {
             Object obj = it.next();
 
-            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 entryActionCalls.append("\tp" + smName + "->" + org.jts.codegenerator.protocolBehavior.Action.addActionOrSendAction(obj));
             } else if (m_codeType == CodeLines.CodeType.JAVA) {
                 entryActionCalls.append("\tp" + smName + "." + org.jts.codegenerator.protocolBehavior.Action.addActionOrSendAction(obj));
@@ -2177,7 +2177,7 @@ public class ProtocolBehaviorGenerator {
         String transitionDefinitionState = action2.getName();
         i++;
 
-        if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             virtualActionMethods.append("\tvirtual void " + wrapperName + "=0;");
             virtualActionMethods.append(System.getProperty("line.separator"));
 
@@ -2269,7 +2269,7 @@ public class ProtocolBehaviorGenerator {
         while (st.hasMoreTokens()) {
             String state = st.nextToken();
 
-            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 actionDefinitions.append("\tif(strcmp(leafStateTOK,stackStateTOK) != 0)").append(System.getProperty("line.separator"));
             } else if (m_codeType == CodeLines.CodeType.JAVA) {
                 actionDefinitions.append("\tcurrentLeafStateTOK = leafStateTOK.nextToken();").append(System.getProperty("line.separator"));
@@ -2299,7 +2299,7 @@ public class ProtocolBehaviorGenerator {
             actionDefinitions.append("\t\treturn;").append(System.getProperty("line.separator"));
             actionDefinitions.append("\t}").append(System.getProperty("line.separator"));
 
-            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 actionDefinitions.append("\tleafStateTOK = strtok(leafStateTOK+1,\"_\");").append(System.getProperty("line.separator"));
                 actionDefinitions.append("\tstackStateTOK = strtok(stackStateTOK+1,\"_\");").append(System.getProperty("line.separator"));
             } else if (m_codeType == CodeLines.CodeType.JAVA) {
@@ -2370,7 +2370,7 @@ public class ProtocolBehaviorGenerator {
 			    {
 					String trigger = "InternalStateChange_To_" + sm.getName() + "_" +
 					       org.jts.codegenerator.support.InheritanceHelper.findFullInitialStateName( endstate, sm ).replace(".", "_");
-					if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS)
+					if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS  || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 						setupNotifications.append("\tp" + parentFSM.getName() + "->registerNotification(\"" + endstate.getName().replace(".", "_") + "\", ieHandler, \"" + trigger + "\", \"" + parentFSM.getName() + "\");");
 					else
 						setupNotifications.append("\t\tp" + parentFSM.getName() + ".registerNotification(\"" + endstate.getName().replace(".", "_") + "\", ieHandler, \"" + trigger + "\", \"" + parentFSM.getName() + "\");");
@@ -2401,7 +2401,7 @@ public class ProtocolBehaviorGenerator {
 			    if ((endstate != null) && (parentFSM != null) && (parentState != null))
 			    {
 					String trigger = "InternalStateChange_To_" + parentFSM.getName() + "_" + parentState.getName().replace(".", "_");
-					if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS)
+					if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 						setupNotifications.append("\tregisterNotification(\"" + endstate.getName().replace(".", "_") + "\", p" + parentFSM.getName() + "->getHandler(), \"" + trigger + "\", \"" + sm.getName() + "\");");
 					else
 						setupNotifications.append("\t\tregisterNotification(\"" + endstate.getName().replace(".", "_") + "\", p" + parentFSM.getName() + ".getHandler(), \"" + trigger + "\", \"" + sm.getName() + "\");");
@@ -2450,7 +2450,7 @@ public class ProtocolBehaviorGenerator {
 				        Simple simple = new Simple();
 				        simple.setEndState( end );
 				        Parameter parameter = new Parameter();
-						if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS) parameter.setType("JTS::InternalEvent*");
+						if (m_codeType == CodeLines.CodeType.C_PLUS_PLUS || m_codeType == CodeLines.CodeType.C_PLUS_PLUS_11) parameter.setType("JTS::InternalEvent*");
 						else parameter.setType("InternalEvent");
 				        parameter.setValue("ie");
 				        Transition transition = new Transition();

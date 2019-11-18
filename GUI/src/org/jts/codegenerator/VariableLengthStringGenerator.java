@@ -82,7 +82,7 @@ public class VariableLengthStringGenerator
             methodCode = new ArrayList<String>();
             methodParam = new ArrayList<String>();
             fieldName = Util.upperCaseFirstLetter(vlString.getName());
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 variableName = CppCode.getVariableName(fieldName);
                 lengthType = CppCode.getVariableType(vlString.getCountField().getFieldTypeUnsigned());
@@ -136,7 +136,7 @@ public class VariableLengthStringGenerator
             methodCode = new ArrayList<String>();
             methodParam = new ArrayList<String>();
             fieldName = Util.upperCaseFirstLetter(vlString.getName());
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 variableName = CppCode.getVariableName(fieldName);
                 lengthType = CppCode.getVariableType(vlString.getCountField().getFieldTypeUnsigned());
@@ -192,7 +192,7 @@ public class VariableLengthStringGenerator
 
 		CodeLines vlsCode = new CodeLines("", codeType, code.getNameSpace());
 		
-		if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		{
 		    fullClassName = parentName;
 		    parentClassName = CppCode.getParentClassName(fullClassName);
@@ -229,7 +229,7 @@ public class VariableLengthStringGenerator
 	private void generateFieldInstance(int pvIndex, CodeLines code) throws CodeGeneratorException
 	{
             // create variable
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.protectedAttributes.add(CppCode.createVariableDeclaration(variableType, fieldName, false));
             }
@@ -269,7 +269,7 @@ public class VariableLengthStringGenerator
             // and the string data itself.
 		
 	    // GetSize method
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add("size += sizeof(" + lengthType + ");");
                 methodCode.add("size += " + stringLength + ";");
@@ -312,7 +312,7 @@ public class VariableLengthStringGenerator
 	    if (vlString.isOptional()) 
 	    {
 	    	methodCode.clear();
-	    	if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+	    	if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", fieldName + "Valid", null, true));
                     methodCode.add("return true;");
@@ -341,7 +341,7 @@ public class VariableLengthStringGenerator
 	{
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 //For Encoding
                 methodCode.add("");
@@ -403,7 +403,7 @@ public class VariableLengthStringGenerator
 	{
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // For Decoding
                 methodCode.add("");
@@ -465,7 +465,7 @@ public class VariableLengthStringGenerator
 	{
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // get declaration
                 code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, null, false));
@@ -494,7 +494,7 @@ public class VariableLengthStringGenerator
             methodParam.clear();
 
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // set parameter
                 methodParam.add("jVariableLengthString value");
@@ -585,7 +585,7 @@ public class VariableLengthStringGenerator
 	
 	private void generateInstanceOverloadIsEqualMethod(CodeLines code)
 	{
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /// Overload operator==
             code.equalLines.add("if ((" + stringLength + " != value." + variableName + ".length()) || (" + variableName + ".compare(value." + variableName + ") != 0))");
@@ -607,7 +607,7 @@ public class VariableLengthStringGenerator
 	
 	private void generateInstanceOverloadNotEqualMethod(CodeLines code)
 	{
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /// Overload operator!=
             code.notEqualLines.add("if ((" + stringLength + " == value." + variableName + ".length()) && (" + variableName + ".compare(value." + variableName + ") == 0))");
@@ -650,7 +650,7 @@ public class VariableLengthStringGenerator
 
             String dimName = Util.upperCaseFirstLetter(dim.getName());
             dimSizeName = dimName + "Size";
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 String dimVarName = CppCode.getVariableName(dimSizeName);
 
                 code.protectedAttributes.add(CppCode.createVariableDeclaration("unsigned int", dimSizeName, false));
@@ -749,7 +749,7 @@ public class VariableLengthStringGenerator
             prevCalc += dim.getSize();
         }
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             //create variable
             code.protectedAttributes.add(CppCode.createVariableDeclaration(variableType, fieldName + "[" + arraySize + "]", false));
             code.constructorLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
@@ -795,7 +795,7 @@ public class VariableLengthStringGenerator
             methodCode.clear();
 		
 	    // GetSize method
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 methodCode.add("for (int i = 0; i < " + arraySize + "; ++i) ");
                 methodCode.add("{");
                 methodCode.add("\tsize += sizeof(" + lengthType + ");");
@@ -816,7 +816,7 @@ public class VariableLengthStringGenerator
 	    // only add size of array if optional is true
 	    if (vlString.isOptional()) 
 	    {
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
                 }
@@ -840,7 +840,7 @@ public class VariableLengthStringGenerator
 	    {
 	    	methodCode.clear();
 
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", fieldName + "Valid", null, true));
                     methodCode.add("return true;");
@@ -868,7 +868,7 @@ public class VariableLengthStringGenerator
     private void generateArrayEncodeMethod(CodeLines code, int arraySize, int pvIndex) {
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             //For Encoding
             methodCode.add("int countfieldSize = sizeof(" + lengthType + ");");
 
@@ -933,7 +933,7 @@ public class VariableLengthStringGenerator
 	{
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // jVariableLengthString
                 code.decoderLines.add("int countfield = 0;");
@@ -1024,7 +1024,7 @@ public class VariableLengthStringGenerator
             List<String> rangeCheckCode, List<String> paramsList) {
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             //Generates the getMethod Declaration and Definition
             code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramsList, false));
             methodCode.addAll(rangeCheckCode);
@@ -1058,7 +1058,7 @@ public class VariableLengthStringGenerator
             List<String> rangeCheckCode, List<String> paramsList, int pvIndex) {
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
 
             //method code
             methodCode.addAll(rangeCheckCode);
@@ -1120,7 +1120,7 @@ public class VariableLengthStringGenerator
         code.equalLines.add("for (int i = 0; i < " + arraySize + "; ++i)");
         code.equalLines.add("{");
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.equalLines.add("\tif ((this->" + variableName + "[i].length() != value." + variableName + "[i].length()) "
                     + "|| (this->" + variableName + "[i].compare(value." + variableName + "[i]) != 0))");
         } else if (codeType == CodeLines.CodeType.JAVA) {
@@ -1140,7 +1140,7 @@ public class VariableLengthStringGenerator
 		
     private void generateArrayOverloadNotEqualMethod(CodeLines code, int arraySize) {
         /// define in terms of method added in generateArrayOverloadIsEqualMethod
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.notEqualLines.add("if (this->operator==(value))");
         } else if (codeType == CodeLines.CodeType.JAVA) {
             code.notEqualLines.add("if (this.isEqual(value))");
@@ -1156,7 +1156,7 @@ public class VariableLengthStringGenerator
 
     private void generateArrayOverloadAssignmentMethod(CodeLines code, int arraySize) {
         /// Overload the operator=
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.assignmentLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
             code.assignmentLines.add("{");
             code.assignmentLines.add("\t" + variableName + "[i] = value." + variableName + "[i];");

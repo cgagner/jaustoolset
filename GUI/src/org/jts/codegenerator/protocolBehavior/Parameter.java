@@ -59,7 +59,7 @@ public class Parameter {
 			{
 				org.jts.jsidl.binding.Parameter par = (org.jts.jsidl.binding.Parameter)tr.getParameter().get(i);
 				String type = par.getType();
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     localBuffer.append(par.getValue() + ":" + type.replaceAll("\\.", "\\:\\:"));
 					if (!type.endsWith("*") && !type.endsWith("&")) localBuffer.append("&");

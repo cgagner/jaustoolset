@@ -97,7 +97,7 @@ public class SequenceGenerator
             /*
              * Create framework for parent reference
              */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
             	CppCode.addParentReference(code, fullClassName, pvIndex, sequence.isOptional());
             }
@@ -142,7 +142,7 @@ public class SequenceGenerator
             String fullClassName = "";
             String variableName = "";
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 fullClassName = parentClassName + "::" + shortClassName;
             }
@@ -170,7 +170,7 @@ public class SequenceGenerator
             }
 
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 cppGenerateClass(code, varCode, pvIndex1, fullClassName, variableName);
                 
@@ -570,7 +570,7 @@ public class SequenceGenerator
             Vector<String> methodCode = new Vector<String>();
             Vector<String> methodParam = new Vector<String>();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 String fullClassName = parentClassName + "::" + shortClassName;
 
@@ -943,7 +943,7 @@ public class SequenceGenerator
             Vector<String> methodParam = new Vector<String>();
             String fullClassName = "";
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 fullClassName = parentClassName + "::" + shortClassName;
 

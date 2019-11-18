@@ -304,7 +304,7 @@ public class Guard {
 		// if it is not a float or integer, it must be a string
 		catch (NumberFormatException e)
 		{
-                    if (codeType == CodeLines.CodeType.C_PLUS_PLUS){
+                    if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11){
 			returnString = "std::string arg" + argumentCount;
                     }
                     else if(codeType == CodeLines.CodeType.JAVA){
@@ -339,7 +339,7 @@ public class Guard {
 			
 			if(currentParameter.getValue().compareTo(variable.replaceAll("\\s", "")) == 0)
 			{
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     returnString = currentParameter.getType().replaceAll("\\.", "\\:\\:") + " " + variable;
                 }

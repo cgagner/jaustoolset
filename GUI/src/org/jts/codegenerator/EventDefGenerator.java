@@ -73,7 +73,7 @@ public class EventDefGenerator
 	
 	public void run(String namespace, String outDir)
 	{
-		if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		{
                     CodeLines code = new CodeLines("", codeType, "JSIDL_v_1_0");
                     Vector<String> includes = new Vector<String>();

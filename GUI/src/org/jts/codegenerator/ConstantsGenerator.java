@@ -70,7 +70,7 @@ public class ConstantsGenerator
           
             try
             {
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     // Open an output stream
                     FileOutputStream fout = new FileOutputStream (outDir + "/include/JConstants.h");

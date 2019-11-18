@@ -74,7 +74,7 @@ public class FooterGenerator
 		String shortClassName;	// The short class name
 		
         if (isNested) {
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 fullClassName = parentClassName + "::" + msgFooter.getName();
             } else if (codeType == CodeLines.CodeType.JAVA || codeType == CodeLines.CodeType.C_SHARP) {
                 fullClassName = msgFooter.getName();
@@ -124,7 +124,7 @@ public class FooterGenerator
          * Create framework for parent reference
          * Create a dummy function so that sub elements can use the same method call until this root is hit
          */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             CppCode.addReferenceSetParentPresenceVector(code, fullClassName);
         }
         else if (codeType == CodeLines.CodeType.JAVA) {
@@ -160,7 +160,7 @@ public class FooterGenerator
 
 	        String varName = "";
                 /// If isNested then we create a wrapper around all the code generated
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     CppCode.addClassWrapper(fullClassName, code);
 

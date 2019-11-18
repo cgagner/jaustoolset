@@ -90,7 +90,7 @@ public class ArrayGenerator
      */
     public void run(String parentName, int pvIndex, boolean hasClass, CodeLines code)
     {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             if (hasClass)
             {
@@ -341,7 +341,7 @@ public class ArrayGenerator
          */
 
         // create variable
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /*
              * Create framework for parent reference
@@ -398,7 +398,7 @@ public class ArrayGenerator
         methodCode.add("size += " + varName + ".getSize();");
         if (array.isOptional())
         {
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
             }
@@ -428,7 +428,7 @@ public class ArrayGenerator
         {
             methodCode.clear();
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
 
@@ -467,7 +467,7 @@ public class ArrayGenerator
         /* 	m_VaribleLengthField1.encode(bytes + pos);
          *	pos += m_VaribleLengthField1.getSize();
          */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(varName + ".encode(bytes + pos);");
             methodCode.add("pos += " + varName + ".getSize();");
@@ -510,7 +510,7 @@ public class ArrayGenerator
          *	pos += m_VaribleLengthField1.getSize();
          */
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(varName + ".decode(bytes + pos);");
             methodCode.add("pos += " + varName + ".getSize();");
@@ -552,7 +552,7 @@ public class ArrayGenerator
         methodCode.clear();
 
         /* Generate getMethod Declaration and Definition */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName + "* const", "get", shortClassName, methodParam, false));
             methodCode.add("return &" + varName + ";");
@@ -580,7 +580,7 @@ public class ArrayGenerator
         methodCode.clear();
 
         /* Generate setMethod Declaration and Definition */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("const " + shortClassName + " &value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", shortClassName, methodParam, false));

@@ -81,7 +81,7 @@ public class BitFieldGenerator //extends FieldClass
         this.codeType = codeType;
        	this.bitField = bitField;
        	this.dimList = null;
-       	if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+       	if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             bfType = CppCode.getVariableType(bitField.getFieldTypeUnsigned());
         }
@@ -111,7 +111,7 @@ public class BitFieldGenerator //extends FieldClass
        	this.bitField = bitField;
        	this.dimList = dimList;
        	
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             bfType = CppCode.getVariableType(bitField.getFieldTypeUnsigned());
         }
@@ -146,7 +146,7 @@ public class BitFieldGenerator //extends FieldClass
 
         CodeLines vfCode = new CodeLines("", codeType, code.getNameSpace());
 		
-    	if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+    	if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
     	{
             fullClassName = parentName + "::" + bitField.getName();
             shortClassName = CppCode.getShortClassName(fullClassName);
@@ -187,7 +187,7 @@ public class BitFieldGenerator //extends FieldClass
         code.addAll(vfCode);
         
         /// Add a class wrapper around the generated code
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
         	CppCode.addClassWrapper(fullClassName, code);
         }
@@ -225,7 +225,7 @@ public class BitFieldGenerator //extends FieldClass
         generateFieldDecodeMethod(bfCode);
 
         // create variable
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             bfCode.protectedAttributes.add(CppCode.createVariableDeclaration(bfType, "subFields", false));
             bfCode.constructorLines.add("m_SubFields = 0;");
@@ -273,7 +273,7 @@ public class BitFieldGenerator //extends FieldClass
     	 *	memcpy(bytes + pos, &m_SubFieldsTemp, sizeof(jUnsignedInteger));
     	 *	pos += sizeof(jUnsignedInteger);
     	 */
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.encoderLines.add(bfType + " m_SubFieldsTemp;");
             code.encoderLines.add("");
@@ -302,7 +302,7 @@ public class BitFieldGenerator //extends FieldClass
          *	m_SubFields = JSIDL_v_1_0::correctEndianess(m_SubFieldsTemp);
          *	pos += sizeof(jUnsignedInteger);
          */
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.decoderLines.clear();
             code.decoderLines.add(bfType + " m_SubFieldsTemp;");
@@ -330,7 +330,7 @@ public class BitFieldGenerator //extends FieldClass
     	methodCode.clear();
     	//code.publicMethods.add(CppCode.createMethodDeclaration(bfType, "get", subField.getName(), methodParam, false));
 
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration(bfType, "get", subFieldName, methodParam, false));
 
@@ -382,7 +382,7 @@ public class BitFieldGenerator //extends FieldClass
     	methodParam.clear();
     	methodCode.clear();
         methodParam.add(bfType + " value");
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", subFieldName, methodParam, false));
 
@@ -460,7 +460,7 @@ public class BitFieldGenerator //extends FieldClass
 	private void generateFieldOverloadAssignmentMethod(CodeLines code)
 	{
             /// Overload the operator=
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.assignmentLines.add("this->m_SubFields = value.m_SubFields;");
             }
@@ -474,7 +474,7 @@ public class BitFieldGenerator //extends FieldClass
 	private void generateFieldOverloadIsEqualMethod(CodeLines code, String subFieldName)
 	{
         // Overload operator==
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.equalLines.add("return (this->m_SubFields == value.m_SubFields);");
             }
@@ -495,7 +495,7 @@ public class BitFieldGenerator //extends FieldClass
 	private void generateFieldOverloadNotEqualMethod(CodeLines code, String subFieldName)
 	{
         // Overload operator!=
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.notEqualLines.add("return (this->m_SubFields != value.m_SubFields);");
             }
@@ -522,7 +522,7 @@ public class BitFieldGenerator //extends FieldClass
              * This has to be done after the class wrapper has been added
              */
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
 				code.protectedAttributes.add(CppCode.createVariableDeclaration(shortClassName, shortClassName, false));
                 CppCode.addParentReferenceConstructorSetParent(code, varName);
@@ -562,7 +562,7 @@ public class BitFieldGenerator //extends FieldClass
 	    // only add size of array if optional is true 
 	    if (bitField.isOptional()) 
 	    {
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
                 }
@@ -584,7 +584,7 @@ public class BitFieldGenerator //extends FieldClass
 	    /// return true if field is set in presence vector
 	    if (bitField.isOptional()) 
 	    {
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
                     methodCode.clear();
@@ -630,7 +630,7 @@ public class BitFieldGenerator //extends FieldClass
 	{
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /* 	m_VaribleLengthField1.encode(bytes + pos);
                  *	pos += m_VaribleLengthField1.getSize();
@@ -639,7 +639,7 @@ public class BitFieldGenerator //extends FieldClass
                 methodCode.add("pos += " + varName + ".getSize();");
                 if (bitField.isOptional())
                 {
-                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                     {
                         methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
                     }
@@ -682,7 +682,7 @@ public class BitFieldGenerator //extends FieldClass
 	{
             methodCode.clear();
 		
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /* 	m_VaribleLengthField1.decode(bytes + pos);
                  *	pos += m_VaribleLengthField1.getSize();
@@ -691,7 +691,7 @@ public class BitFieldGenerator //extends FieldClass
                 methodCode.add("pos += " + varName + ".getSize();");
                 if (bitField.isOptional())
                 {
-                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                     {
                         methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
                     }
@@ -735,7 +735,7 @@ public class BitFieldGenerator //extends FieldClass
             methodParam.clear();
             methodCode.clear();
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 ///  Generate getMethod Declaration and Definition
                 code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName + "* const", "get", shortClassName, methodParam, false));
@@ -764,7 +764,7 @@ public class BitFieldGenerator //extends FieldClass
             methodParam.clear();
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 ///  Generate setMethod Declaration and Definition
                 methodParam.add("const " + shortClassName + " &value");
@@ -845,7 +845,7 @@ public class BitFieldGenerator //extends FieldClass
                 String dimName = Util.upperCaseFirstLetter(dim.getName());
                 String dimSizeName = dimName + "Size";
 
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     String dimVarName = CppCode.getVariableName(dimSizeName);
 
@@ -938,7 +938,7 @@ public class BitFieldGenerator //extends FieldClass
 	     */
 		
             // create variable
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /*
                  * Create framework for parent reference
@@ -991,7 +991,7 @@ public class BitFieldGenerator //extends FieldClass
 	    /// GetSize method
 	    /// only add size of array if optional is true 
 		methodCode.clear();
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
     		methodCode.add("for (unsigned int i = 0; i < "  + arraySize + "; i++)");
         }
@@ -1008,7 +1008,7 @@ public class BitFieldGenerator //extends FieldClass
 		methodCode.add("}");
 	    if (bitField.isOptional())
             {
-        	if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        	if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
                 }
@@ -1030,7 +1030,7 @@ public class BitFieldGenerator //extends FieldClass
 	    /// return true if field is set in presence vector
 	    if (bitField.isOptional()) 
 	    {
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
                     methodCode.clear();
@@ -1068,7 +1068,7 @@ public class BitFieldGenerator //extends FieldClass
 	     *		pos += m_VaribleLengthField1[i].getSize();
 	     * }
 	     */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add("for (unsigned int i = 0; i < "  + arraySize + "; i++)");
                 methodCode.add("{");
@@ -1111,7 +1111,7 @@ public class BitFieldGenerator //extends FieldClass
 	     *		pos += m_VaribleLengthField1[i].getSize();
 	     * }
 	     */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add("for (unsigned int i = 0; i < "  + arraySize + "; i++)");
                 methodCode.add("{");
@@ -1147,7 +1147,7 @@ public class BitFieldGenerator //extends FieldClass
 		
     private void generateArrayGetMethod(CodeLines code, String posCalc, List<String> getMethodCode, List<String> paramCode) {
         ///  Generate getMethod Declaration and Definition
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName + "* const", "get", shortClassName, paramCode, false));
 
             methodCode.clear();
@@ -1175,7 +1175,7 @@ public class BitFieldGenerator //extends FieldClass
 		
     private void generateArraySetMethod(CodeLines code, String posCalc, List<String> setMethodCode, List<String> paramCode) {
         ///  Generate setMethod Declaration and Definition
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             paramCode.add("const " + shortClassName + " &value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", shortClassName, paramCode, false));
 
@@ -1220,7 +1220,7 @@ public class BitFieldGenerator //extends FieldClass
 
     private void generateArrayOverloadIsEqualMethod(CodeLines code, int arraySize) {
         /// Overload operator==
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.equalLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
             code.equalLines.add("{");
             code.equalLines.add("\tif (" + varName + "[i] != value." + varName + "[i])");
@@ -1239,7 +1239,7 @@ public class BitFieldGenerator //extends FieldClass
 
     private void generateArrayOverloadNotEqualMethod(CodeLines code, int arraySize) {
         /// Overload operator!=
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.notEqualLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
             code.notEqualLines.add("{");
             code.notEqualLines.add("\tif (" + varName + "[i] != value." + varName + "[i])");
@@ -1258,7 +1258,7 @@ public class BitFieldGenerator //extends FieldClass
 
     private void generateArrayOverloadAssignmentMethod(CodeLines code, int arraySize) {
         /// Overload the operator=
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.assignmentLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
             code.assignmentLines.add("{");
             code.assignmentLines.add("\t" + varName + "[i] = value." + varName + "[i];");

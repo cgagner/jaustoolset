@@ -72,7 +72,7 @@ public class MessageDefGenerator {
     }
 
     public void run(String namespace, String outDir) {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             CodeLines code = new CodeLines("", codeType, "JSIDL_v_1_0");
             List<String> includes = new ArrayList<String>();
             List<String> baseClassList = new ArrayList<String>();
@@ -324,7 +324,7 @@ public class MessageDefGenerator {
      */
     public String getCompositeType(Object messageComponent) {
         String variableName = null;
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             if (messageComponent instanceof Header) {
                 Header header = (Header) messageComponent;
 

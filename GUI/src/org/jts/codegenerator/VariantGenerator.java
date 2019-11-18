@@ -64,7 +64,7 @@ public class VariantGenerator
         methodCode = new Vector<String>();
         methodParam = new Vector<String>();
         shortClassName = variant.getName();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             varName = CppCode.getVariableName(shortClassName);
         }
@@ -88,7 +88,7 @@ public class VariantGenerator
         methodCode = new Vector<String>();
         methodParam = new Vector<String>();
         shortClassName = variant.getName();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             varName = CppCode.getVariableName(shortClassName);
         }
@@ -111,7 +111,7 @@ public class VariantGenerator
      */
     public void run(String parentName, int pvIndex, CodeLines code)
     {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             parentClassName = parentName;
             fullClassName = parentClassName + "::" + shortClassName;
@@ -167,7 +167,7 @@ public class VariantGenerator
         CodeLines varCode = new CodeLines("", codeType, code.getNameSpace());
         String valueVariableName = "";
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             // FieldValue is based on user selected type
             String fieldType = CppCode.getVariableType(variant.getVtagField().getFieldTypeUnsigned());
@@ -449,7 +449,7 @@ public class VariantGenerator
         generateClassOverloadNotEqualMethod(code);
 
         /// Add a class wrapper around the generated code
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             CppCode.addClassWrapper(fullClassName, code);
         }
@@ -468,7 +468,7 @@ public class VariantGenerator
         /// getFieldValue()
         methodCode.clear();
         methodParam.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             // FieldValue is based on user selected type
             String fieldType = CppCode.getVariableType(variant.getVtagField().getFieldTypeUnsigned());
@@ -495,7 +495,7 @@ public class VariantGenerator
     private void generateClassSetFieldValue(CodeLines code)
     {
         // FieldValue is based on user selected type
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             String fieldType = CppCode.getVariableType(variant.getVtagField().getFieldTypeUnsigned());
 
@@ -586,7 +586,7 @@ public class VariantGenerator
          * This has to be done after the class wrapper has been added
          */
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /*
              * Create framework for parent reference
@@ -640,7 +640,7 @@ public class VariantGenerator
         methodCode.add("size += " + varName + ".getSize();");
         if (variant.isOptional())
         {
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
             }
@@ -664,7 +664,7 @@ public class VariantGenerator
         {
             methodCode.clear();
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
 
@@ -697,7 +697,7 @@ public class VariantGenerator
          */
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(varName + ".encode(bytes + pos);");
             methodCode.add("pos += " + varName + ".getSize();");
@@ -736,7 +736,7 @@ public class VariantGenerator
          *	pos += m_Record1.getSize();
          */
         methodCode.clear();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(varName + ".decode(bytes + pos);");
             methodCode.add("pos += " + varName + ".getSize();");
@@ -775,7 +775,7 @@ public class VariantGenerator
         methodParam.clear();
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName + "* const", "get", shortClassName, methodParam, false));
 
@@ -800,7 +800,7 @@ public class VariantGenerator
         methodParam.clear();
         methodCode.clear();
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("const " + shortClassName + " &value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", shortClassName, methodParam, false));
@@ -848,7 +848,7 @@ public class VariantGenerator
         // operator=
         code.assignmentLines.add(varName + " = value." + varName + ";");
         // Create framework for parent reference
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.assignmentLines.add(CppCode.getParentReferenceVariableSetParent(varName));
         }
@@ -866,7 +866,7 @@ public class VariantGenerator
     {
         /// Overload operator==
         /// Add code for checking equality
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             if (!code.equalLines.isEmpty())
             {
@@ -909,7 +909,7 @@ public class VariantGenerator
         {
             code.notEqualLines.add("");
         }
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.notEqualLines.add("if (" + varName + " == value." + varName + ")");
         }
@@ -940,7 +940,7 @@ public class VariantGenerator
          * Create the getMethod and setMethod
          * This has to be done after the class wrapper has been added
          */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /*
              * Create framework for parent reference
@@ -999,7 +999,7 @@ public class VariantGenerator
          * GetSize method
          * only add size of array if optional is true
          */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add("size += sizeof(" + CppCode.getVariableType(countFieldType) + ");");
             methodCode.add("for (int i = 0; i < " + varName + ".size(); i++)");
@@ -1048,7 +1048,7 @@ public class VariantGenerator
         {
             methodCode.clear();
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
 
@@ -1083,7 +1083,7 @@ public class VariantGenerator
          */
 
         /* First set the count */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(CppCode.getVariableType(countFieldType) + " size = (" + CppCode.getVariableType(countFieldType) + ") " + varName + ".size();");
             methodCode.add("memcpy( bytes, &size, sizeof(size));");
@@ -1143,7 +1143,7 @@ public class VariantGenerator
          *	pos += m_Record1.getSize();
          */
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /* pull the count */
             methodCode.add(CppCode.getVariableType(countFieldType) + " size;");
@@ -1209,7 +1209,7 @@ public class VariantGenerator
         methodParam.clear();
 
         /// getNumberOfElements()
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration("unsigned int", "get", "NumberOfElements", null, true));
             methodCode.add("return (unsigned int) " + varName + ".size();");
@@ -1233,7 +1233,7 @@ public class VariantGenerator
         methodParam.clear();
 
         /// getElement(index)
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("unsigned int " + "index");
             code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName + "* const", "get", "Element", methodParam, false));
@@ -1260,7 +1260,7 @@ public class VariantGenerator
         methodParam.clear();
 
         /// setElement(index,value)
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("unsigned int " + "index");
             methodParam.add("const " + shortClassName + " &value");
@@ -1318,7 +1318,7 @@ public class VariantGenerator
         methodParam.clear();
 
         /// addElement(value)
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("const " + shortClassName + " &value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "add", "Element", methodParam, false));
@@ -1355,7 +1355,7 @@ public class VariantGenerator
         methodParam.clear();
 
         /// deleteElement(index)
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("unsigned int " + "index");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "delete", "Element", methodParam, false));
@@ -1401,7 +1401,7 @@ public class VariantGenerator
         methodParam.clear();
 
         /// deleteLastElement()
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "delete", "LastElement", methodParam, false));
             methodCode.add(varName + ".pop_back();");
@@ -1426,7 +1426,7 @@ public class VariantGenerator
 
         /// Overload the operator=
         /// Add code to the assignment lines of code
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(varName + ".clear();");
             methodCode.add("");
@@ -1480,7 +1480,7 @@ public class VariantGenerator
 
         /// Overload operator==
         /// Add code for checking equality
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add("if (" + varName + ".size() != value." + varName + ".size())");
             methodCode.add("{");
@@ -1550,7 +1550,7 @@ public class VariantGenerator
 
         /// Overload operator!=
         /// Add code checking inequality
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add("for (int i = 0; i < " + varName + ".size(); i++)");
             methodCode.add("{");

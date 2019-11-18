@@ -112,6 +112,7 @@ public class CodeGenerator extends Thread
   "[{-n,--name} component name (default = JAUSComponent)]\n"+
   "[{--id} component id (default = 1)]" +
   "[{--c++} set language to C++]"+
+  "[{--c++11} set language to C++]"+
   "[{--java} set language to Java]" +
   "[{--cs} set language to C#]" +
   "[{--scons} set build to scons]" +
@@ -127,6 +128,7 @@ public class CodeGenerator extends Thread
         CmdLineParser.Option name = parser.addStringOption('n', "name");
         CmdLineParser.Option id = parser.addStringOption("id");
         CmdLineParser.Option cpp = parser.addBooleanOption("c++");
+        CmdLineParser.Option cpp11 = parser.addBooleanOption("c++11");
         CmdLineParser.Option java = parser.addBooleanOption("java");
         CmdLineParser.Option cs = parser.addBooleanOption("cs");
         CmdLineParser.Option scons = parser.addBooleanOption("scons");
@@ -149,6 +151,7 @@ public class CodeGenerator extends Thread
         String nameValue = (String)parser.getOptionValue(name, "JAUSComponent");
         String idValue = (String)parser.getOptionValue(id, "1");
         Boolean cppValue = (Boolean)parser.getOptionValue(cpp);
+        Boolean cpp11Value = (Boolean)parser.getOptionValue(cpp11);
         Boolean javaValue = (Boolean)parser.getOptionValue(java);
         Boolean csValue = (Boolean)parser.getOptionValue(cs);
         Boolean sconsValue = (Boolean)parser.getOptionValue(scons);
@@ -197,6 +200,9 @@ public class CodeGenerator extends Thread
         	{
         		new ComponentGenerator(CodeLines.CodeType.C_PLUS_PLUS, CodeLines.BuildType.SCONS).run(outputPathValue, nameValue, idValue.toString(), serviceSet);
         	}
+        }
+        else if (cpp11Value != null && cpp11Value.booleanValue()){
+            new ComponentGenerator(CodeLines.CodeType.C_PLUS_PLUS_11, CodeLines.BuildType.SCONS).run(outputPathValue, nameValue, idValue.toString(), serviceSet);
         }
         else if (javaValue != null && javaValue.booleanValue()){
             new ComponentGenerator(CodeLines.CodeType.JAVA, CodeLines.BuildType.SCONS).run(outputPathValue, nameValue, idValue.toString(), serviceSet);

@@ -71,7 +71,7 @@ public class ComponentGenerator
 	 */
 	public void run(String outDirName, String cmptName, String cmptId, ServiceSet sSet) throws CodeGeneratorException
 	{
-		if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		{
 			File outDir;
 			Vector<String> serviceLibs = new Vector<String>();
@@ -608,7 +608,7 @@ public class ComponentGenerator
 		 // We need to get the service name and namespace.  Easiest way to do that is through the service def generator
 		 ServiceDefGenerator sdGen = new ServiceDefGenerator(codeType, sDef, reducedSet);
 
-		 if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		 if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		 {		 
 			 // Now we can check to see if this service def already exists in the constructor list.
 			 // If it does, there is nothing more to do...

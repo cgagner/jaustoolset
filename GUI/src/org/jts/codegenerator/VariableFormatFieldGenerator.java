@@ -84,7 +84,7 @@ public class VariableFormatFieldGenerator
 		
 		methodCode = new ArrayList<String>();
 		methodParam = new ArrayList<String>();
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             formatVarType = "jUnsignedByte";
             formatVarName = CppCode.getVariableName("format");
             lengthType = CppCode.getVariableType(vfField.getCountField().getFieldTypeUnsigned());
@@ -117,7 +117,7 @@ public class VariableFormatFieldGenerator
 		methodParam = new ArrayList<String>();
 		
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             formatVarType = "jUnsignedByte";
             formatVarName = CppCode.getVariableName("format");
             tempVarName = formatVarName + "Temp";
@@ -146,7 +146,7 @@ public class VariableFormatFieldGenerator
 	
 	public void run(String parentName, int pvIndex, boolean isNested, CodeLines code) throws CodeGeneratorException
 	{
-		if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		{
 		        fullClassName = parentName + "::" + vfField.getName();
 		        shortClassName = CppCode.getShortClassName(fullClassName);
@@ -186,7 +186,7 @@ public class VariableFormatFieldGenerator
 		generateFieldCode(pvIndex, vfCode);
 		code.addAll(vfCode);
 		
-		if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		{
 			CppCode.addClassWrapper(fullClassName, code);
 		}
@@ -219,7 +219,7 @@ public class VariableFormatFieldGenerator
 	{
             // create variables
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // field format
                 code.protectedAttributes.add(CppCode.createVariableDeclaration(formatVarType, "format", false));
@@ -289,7 +289,7 @@ public class VariableFormatFieldGenerator
 	
 	private void generateFieldGetSizeMethod(CodeLines code)
 	{
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /// Add the code for the field format
                 code.sizeLines.add("size += sizeof(" + formatVarType + ");");
@@ -326,7 +326,7 @@ public class VariableFormatFieldGenerator
 	
     private void generateFieldEncodeMethod(CodeLines code) {
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             /// Add the code for the field format
             tempVarName = formatVarName + "Temp";
             code.encoderLines.add(formatVarType + " " + tempVarName + ";");
@@ -377,7 +377,7 @@ public class VariableFormatFieldGenerator
 	
 	private void generateFieldDecodeMethod(CodeLines code)
 	{
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /// Add the code for the field format
                 tempVarName = formatVarName + "Temp";
@@ -453,7 +453,7 @@ public class VariableFormatFieldGenerator
 		
             /// Add the code for the field format
             /// Add the getFormat() Method
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("const " + formatVarType, "get", "format", methodParam, true));
 
@@ -478,7 +478,7 @@ public class VariableFormatFieldGenerator
             methodParam.clear();
 		
             /// Add getLength() method
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("const " + lengthType, "get", "length", methodParam, true));
            
@@ -503,7 +503,7 @@ public class VariableFormatFieldGenerator
             methodParam.clear();
 
             /// Add getData() method
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("const unsigned char", "*get", "data", null, true));
 
@@ -531,7 +531,7 @@ public class VariableFormatFieldGenerator
             methodCode.clear();
             methodParam.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // Add code for the set(jUnsignedByte format, <lengthType> length, unsigned char *data) method
                 methodParam.add(formatVarType + " format");
@@ -611,7 +611,7 @@ public class VariableFormatFieldGenerator
 	
 	private void generateFieldOverloadAssignmentMethod(CodeLines code)
 	{
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /// Overload the operator=
                 code.assignmentLines.add("this->" + formatVarName + " = value." + formatVarName + ";");
@@ -659,7 +659,7 @@ public class VariableFormatFieldGenerator
 	
 	private void generateFieldOverloadIsEqualMethod(CodeLines code)
 	{
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /// Overload operator==
                 code.equalLines.add("if (this->" + formatVarName + " != value." + formatVarName + ")");
@@ -756,7 +756,7 @@ public class VariableFormatFieldGenerator
 	
 	private void generateFieldOverloadNotEqualMethod(CodeLines code)
 	{
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /// Overload operator!=
                 code.notEqualLines.add("if (this->" + formatVarName + " == value." + formatVarName + ")");
@@ -811,7 +811,7 @@ public class VariableFormatFieldGenerator
              */
 		
             // create variable
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.protectedAttributes.add(CppCode.createVariableDeclaration(shortClassName, shortClassName, false));
                 CppCode.addParentReferenceConstructorSetParent(code, varName);
@@ -848,7 +848,7 @@ public class VariableFormatFieldGenerator
 	    methodCode.add("size += " + varName + ".getSize();");
 	    if (vfField.isOptional()) 
 	    {
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
                 }
@@ -871,7 +871,7 @@ public class VariableFormatFieldGenerator
 	    if (vfField.isOptional()) 
 	    {
 	    	methodCode.clear();
-	    	if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+	    	if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
 
@@ -903,7 +903,7 @@ public class VariableFormatFieldGenerator
 	{
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /* 	m_VaribleLengthField1.encode(bytes + pos);
                  *	pos += m_VaribleLengthField1.getSize();
@@ -955,7 +955,7 @@ public class VariableFormatFieldGenerator
             /* 	m_VaribleLengthField1.decode(bytes + pos);
              *	pos += m_VaribleLengthField1.getSize();
              */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add(varName + ".decode(bytes + pos);");
                 methodCode.add("pos += " + varName + ".getSize();");
@@ -996,7 +996,7 @@ public class VariableFormatFieldGenerator
             methodParam.clear();
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 ///  Generate getMethod Declaration and Definition
                 code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName  + "* const", "get", shortClassName, methodParam, false));
@@ -1025,7 +1025,7 @@ public class VariableFormatFieldGenerator
             methodParam.clear();
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 ///  Generate setMethod Declaration and Definition
                 methodParam.add("const " + shortClassName + " &value");
@@ -1112,7 +1112,7 @@ public class VariableFormatFieldGenerator
                 String dimSizeName = dimName + "Size";
                 String dimVarName = "";
 
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     dimVarName = CppCode.getVariableName(dimSizeName);
 
@@ -1219,7 +1219,7 @@ public class VariableFormatFieldGenerator
 	     */
 		
             // create variable
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 /*
                  * Create framework for parent reference
@@ -1274,7 +1274,7 @@ public class VariableFormatFieldGenerator
 		
 	    /// GetSize method
 	    /// only add size of array if optional is true 
-		if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
     		methodCode.add("for (unsigned int i = 0; i < "  + arraySize + "; i++)");
         }
@@ -1291,7 +1291,7 @@ public class VariableFormatFieldGenerator
 		methodCode.add("}");
 	    if (vfField.isOptional()) 
 	    {
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     methodCode = CppCode.addOptionalWrapper(pvIndex, methodCode);
                 }
@@ -1315,7 +1315,7 @@ public class VariableFormatFieldGenerator
 	    {
 	    	methodCode.clear();
 
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", shortClassName + "Valid", null, true));
 
@@ -1359,7 +1359,7 @@ public class VariableFormatFieldGenerator
              *          pos += m_VariableLengthField.get(i).getSize();
              *
 	     */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add("for (unsigned int i = 0; i < "  + arraySize + "; i++)");
                 methodCode.add("{");
@@ -1415,7 +1415,7 @@ public class VariableFormatFieldGenerator
              *      m_VariableLengthField[i].decode(bytes, pos);
              * ...
 	     */
-             if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
              {
                 methodCode.add("for (unsigned int i = 0; i < "  + arraySize + "; i++)");
                 methodCode.add("{");
@@ -1453,7 +1453,7 @@ public class VariableFormatFieldGenerator
 		methodCode.clear();
 		
 		///  Generate getMethod Declaration and Definition
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName  + "* const", "get", shortClassName, paramCode, false));
 
@@ -1486,7 +1486,7 @@ public class VariableFormatFieldGenerator
 		methodCode.clear();
 		
                 ///  Generate setMethod Declaration and Definition
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     paramCode.add("const " + shortClassName + " &value");
                     code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", shortClassName, paramCode, false));
@@ -1538,7 +1538,7 @@ public class VariableFormatFieldGenerator
      */
     private void generateArrayOverloadIsEqualMethod(CodeLines code, int arraySize) {
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.equalLines.add("for (int i = 0; i < " + arraySize + "; i++)");
             code.equalLines.add("{");
             code.equalLines.add("\tif (" + varName + "[i] != value." + varName + "[i])");
@@ -1561,7 +1561,7 @@ public class VariableFormatFieldGenerator
      * @param arraySize Length of the array being generated
      */
     private void generateArrayOverloadNotEqualMethod(CodeLines code, int arraySize) {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.notEqualLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
             code.notEqualLines.add("{");
             code.notEqualLines.add("\tif (" + varName + "[i] != value." + varName + "[i])");
@@ -1580,7 +1580,7 @@ public class VariableFormatFieldGenerator
 
     private void generateArrayOverloadAssignmentMethod(CodeLines code, int arraySize) {
         /// Overload the operator=
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             code.assignmentLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
             code.assignmentLines.add("{");
             code.assignmentLines.add("\t" + varName + "[i] = value." + varName + "[i];");

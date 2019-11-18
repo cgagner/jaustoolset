@@ -166,7 +166,7 @@ public class Transition {
 				localBuffer.append("processNotifications(" + endstate);
 				if (tr.getName().startsWith("InternalStateChange_To_"))
 				    localBuffer.append(", ie");
-				else if (codeType != CodeLines.CodeType.C_PLUS_PLUS)
+				else if (codeType != CodeLines.CodeType.C_PLUS_PLUS && codeType != CodeLines.CodeType.C_PLUS_PLUS_11)
 					localBuffer.append(", null");
 				localBuffer.append(");");
 			}
@@ -1137,10 +1137,16 @@ public class Transition {
 		messageTransitions.append("\t\t\t{");
 		messageTransitions.append(System.getProperty("line.separator"));
 
-                if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     // switch based on the transition trigger
-                    messageTransitions.append("\t\t\t\tif (ie->getName().compare(\"").append(getTriggerName(tr, sd)).append("\") == 0 && (ie->getSource().compare(\"" + sm.getName() + "\") != 0))");
+                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+                        messageTransitions.append("\t\t\t\tif (ie->getName().compare(\"").append(getTriggerName(tr, sd)).append("\") == 0 && (ie->getSource().compare(\"" + sm.getName() + "\") != 0))");
+                    } else {
+                        messageTransitions.append("\t\t\t\tif ((done == false) && ie->getName().compare(\"").append(getTriggerName(tr, sd)).append("\") == 0 && (ie->getSource().compare(\"" + sm.getName() + "\") != 0))");
+                    }
+
+
                     messageTransitions.append(System.getProperty("line.separator"));
                     messageTransitions.append("\t\t\t\t{");
                     messageTransitions.append(System.getProperty("line.separator"));
@@ -1185,9 +1191,17 @@ public class Transition {
                     addParameterCallStack(tr.getParameter(), messageTransitions);
                     messageTransitions.append(");");
                     messageTransitions.append(System.getProperty("line.separator"));
-
-                    // If the call is successful, stop checking for other transitions.
-                    messageTransitions.append("\t\t\t\t\t\treturn true;").append(System.getProperty("line.separator"));
+                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+                        // If the call is successful, stop checking for other transitions.
+                        messageTransitions.append("\t\t\t\t\t\treturn true;").append(System.getProperty("line.separator"));
+                    } else {
+                        // If the call is successful, stop checking for other transitions.  Goto the 'leave' label
+                        // for clean-up and exit.
+                        messageTransitions.append("\t\t\t\t\t\tdone = true;");
+                        messageTransitions.append(System.getProperty("line.separator"));
+					messageTransitions.append("\t\t\t\t\t\tgoto leave;");
+                        messageTransitions.append(System.getProperty("line.separator"));
+                    }
 
                     // If this transition is triggered on an input message, we have an additional level
                     // of nesting to pop.
@@ -1402,7 +1416,7 @@ public class Transition {
         StringBuilder msg_value = new StringBuilder();
         findInputMessage(tr, msg_type, msg_value, sd);
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             declareCPPParams(tr, sd, messageTransitions, msg_type, msg_value);
         }
@@ -1849,14 +1863,18 @@ public class Transition {
 	{
 		if (inputMessages.size() == 0) return;
 
-		if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             // Set-up the IF condition
 			messageTransitions.append("\t\t\ttry");
             messageTransitions.append(System.getProperty("line.separator"));
 			messageTransitions.append("\t\t\t{");
             messageTransitions.append(System.getProperty("line.separator"));
-            messageTransitions.append("\t\t\t\tif (ie->getName().compare(\"Receive\") == 0)");
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+                messageTransitions.append("\t\t\t\tif (ie->getName().compare(\"Receive\") == 0)");
+            } else {
+                messageTransitions.append("\t\t\t\tif ((done == false) && (ie->getName().compare(\"Receive\") == 0))");
+            }
             messageTransitions.append(System.getProperty("line.separator"));
             messageTransitions.append("\t\t\t\t{");
             messageTransitions.append(System.getProperty("line.separator"));
@@ -1885,7 +1903,11 @@ public class Transition {
 			// If the IF check is satisfies, exit the function by jumping to the end
 			messageTransitions.append(")");
 			messageTransitions.append(System.getProperty("line.separator"));
-			messageTransitions.append("\t\t\t\t\t\treturn false;");
+                        if(codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+			    messageTransitions.append("\t\t\t\t\t\treturn false;");
+                        } else {
+                            messageTransitions.append("\t\t\t\t\t\tgoto leave;");
+                        }
 			messageTransitions.append(System.getProperty("line.separator"));
 				
 			// Pop the rest of the way, and add an empty catch.

@@ -73,7 +73,7 @@ public class PresenceVectorGenerator
 	 */
 	public void run(String parentClassName, boolean isNested, CodeLines code)
 	{
-		if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		{
             runCPP(parentClassName, isNested, code);
 		}

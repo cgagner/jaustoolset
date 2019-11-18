@@ -81,7 +81,7 @@ public class FixedFieldGenerator
         methodParam = new Vector<String>();
         fieldName = Util.upperCaseFirstLetter(fixedField.getName());
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             variableName = CppCode.getVariableName(fieldName);
             tempVariableName = variableName + "Temp";
@@ -119,7 +119,7 @@ public class FixedFieldGenerator
 		methodParam = new Vector<String>();
 		fieldName = Util.upperCaseFirstLetter(fixedField.getName());
 		
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     variableName = CppCode.getVariableName(fieldName);
                     tempVariableName = variableName + "Temp";
@@ -155,7 +155,7 @@ public class FixedFieldGenerator
 	{
             CodeLines ffCode = new CodeLines("", codeType, code.getNameSpace());
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 if (hasClass)
                 {
@@ -287,7 +287,7 @@ public class FixedFieldGenerator
     private void generateFieldInstance(int pvIndex, CodeLines code, String initValue) throws CodeGeneratorException
 	{
             // create variable
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.protectedAttributes.add(CppCode.createVariableDeclaration(variableType, fieldName, false));
             }
@@ -342,7 +342,7 @@ public class FixedFieldGenerator
 	    /// GetSize method
 	    /// only add size of array if optional is true
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add("size += sizeof(" + variableType  + ");");
                 if (fixedField.isOptional())
@@ -378,7 +378,7 @@ public class FixedFieldGenerator
 	    {
 	    	methodCode.clear();
 
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", fieldName + "Valid", null, true));
                     methodCode.add("return true;");
@@ -414,7 +414,7 @@ public class FixedFieldGenerator
              *	pos += sizeof(jUnsignedShortInteger);
              */
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add(variableType + " " + tempVariableName + ";");
                 methodCode.add("");
@@ -464,7 +464,7 @@ public class FixedFieldGenerator
 	     *	m_DestSubsystemIDTemp = JSIDL_V0_9::correctEndianess(m_DestSubsystemIDTemp);
 	     *	pos += sizeof(jUnsignedShortInteger);
 	     */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add(variableType + " " + tempVariableName + ";");
                 methodCode.add("");
@@ -509,7 +509,7 @@ public class FixedFieldGenerator
 	{
             methodCode.clear();
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 ///  Generate getMethod Declaration and Definition
                 code.publicMethods.add(CppCode.createMethodDeclaration("double", "get", fieldName, null, false));
@@ -549,7 +549,7 @@ public class FixedFieldGenerator
             methodCode.clear();
 		
             /* Create the get Method Declaration and Definitions */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, methodParam, false));
 
@@ -582,7 +582,7 @@ public class FixedFieldGenerator
             ///  Generate setMethod Declaration and Definition
             methodParam.add("double value");
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, methodParam, false));
             }
@@ -594,7 +594,7 @@ public class FixedFieldGenerator
             }
             
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // Create framework for parent reference
                 methodCode.add(CppCode.getParentReferenceSetParentPVLine());
@@ -631,7 +631,7 @@ public class FixedFieldGenerator
 		
             /* Create the set Method Declaration and Definitions */
             methodParam.add(variableType + " value");
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, methodParam, false));
             }
@@ -649,7 +649,7 @@ public class FixedFieldGenerator
         	methodCode.add("setPresenceVector("+ pvIndex +");");
             }
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // Create framework for parent reference
                 methodCode.add(CppCode.getParentReferenceSetParentPVLine());
@@ -696,7 +696,7 @@ public class FixedFieldGenerator
 	}
 	
     private void generateInstanceOverloadIsEqualMethod(CodeLines code) {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             /// Overload operator==
             code.equalLines.add("if (" + variableName + " != value." + variableName + ")");
             code.equalLines.add("{");
@@ -720,7 +720,7 @@ public class FixedFieldGenerator
     }
 
     private void generateInstanceOverloadNotEqualMethod(CodeLines code) {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             /// Overload operator!=
             code.notEqualLines.add("if (" + variableName + " == value." + variableName + ")");
             code.notEqualLines.add("{");
@@ -761,7 +761,7 @@ public class FixedFieldGenerator
 
         paramCode.clear();
 
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             for (int i = 0; i < dimList.size(); i++)
             {
@@ -963,7 +963,7 @@ public class FixedFieldGenerator
 		
 	    /// GetSize method
 	    /// only add size of array if optional is true
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add("size += sizeof(" + variableType  + ") * " + arraySize + ";");
                 if (fixedField.isOptional())
@@ -1016,7 +1016,7 @@ public class FixedFieldGenerator
              *	memcpy(bytes + pos, &m_DestSubsystemIDTemp, sizeof(jUnsignedShortInteger));
              *	pos += sizeof(jUnsignedShortInteger);
              */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add(variableType + " " + tempVariableName + ";");
                 methodCode.add("");
@@ -1076,7 +1076,7 @@ public class FixedFieldGenerator
              *		pos += sizeof(jUnsignedShortInteger);
              * }
              */
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add(variableType + " " + tempVariableName + ";");
                 methodCode.add("");
@@ -1139,7 +1139,7 @@ public class FixedFieldGenerator
 		
             ///  Generate getMethod Declaration and Definition
             //methodParam.clear();
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
 		code.publicMethods.add(CppCode.createMethodDeclaration("double", "get", fieldName, paramCode, false));
       
@@ -1182,7 +1182,7 @@ public class FixedFieldGenerator
 		
             ///  Generate setMethod Declaration and Definition
             paramCode.add("double value");
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, paramCode, false));
 
@@ -1239,7 +1239,7 @@ public class FixedFieldGenerator
 		
             /* Create the get Method Declaration and Definitions */
     //    	methodParam.clear();
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramCode, false));
 
@@ -1277,7 +1277,7 @@ public class FixedFieldGenerator
             /* Create the set Method Declaration and Definitions */
     //    	methodParam.clear();
             paramCode.add(variableType + " value");
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, paramCode, false));
 
@@ -1312,7 +1312,7 @@ public class FixedFieldGenerator
 
 
 
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // Create framework for parent reference
                 methodCode.add(CppCode.getParentReferenceSetParentPVLine());
@@ -1355,7 +1355,7 @@ public class FixedFieldGenerator
 	private void generateArrayOverloadAssignmentMethod(CodeLines code, int arraySize)
 	{
             /// Overload the operator=
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.assignmentLines.add("memcpy(" + variableName + ", value." + variableName + ", sizeof(" + variableType + ") * " + arraySize + ");");
             }
@@ -1372,7 +1372,7 @@ public class FixedFieldGenerator
 	private void generateArrayOverloadIsEqualMethod(CodeLines code, int arraySize)
 	{
             /// Overload operator==
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
             /// if (memcmp(varName, value.varName, sizeof(varType) * arraySize) != 0)
                 code.equalLines.add("if (memcmp(" + variableName + ", value." + variableName + ", sizeof(" + variableType + ") * " + arraySize + ") != 0)");
@@ -1396,7 +1396,7 @@ public class FixedFieldGenerator
 	private void generateArrayOverloadNotEqualMethod(CodeLines code, int arraySize)
 	{
             /// Overload operator!=
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.notEqualLines.add("if (memcmp(" + variableName + ", value." + variableName + ", sizeof(" + variableType + ") * " + arraySize + ") == 0)");
             }

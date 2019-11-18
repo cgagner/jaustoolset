@@ -75,7 +75,7 @@ public class ListGenerator {
         /*
          * Create framework for parent reference
          */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             fullClassName = parentClassName + "::" + shortClassName;
             CppCode.addParentReference(code, fullClassName, pvIndex, list.isOptional());
         } else if (codeType == CodeLines.CodeType.JAVA) {
@@ -114,7 +114,7 @@ public class ListGenerator {
         CodeLines listCode = new CodeLines("", codeType, code.getNameSpace());
 
         String fullClassName = "";
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             fullClassName = parentClassName + "::" + shortClassName;
         } else if (codeType == CodeLines.CodeType.JAVA || codeType == CodeLines.CodeType.C_SHARP) {
             fullClassName = parentClassName + "." + shortClassName;
@@ -152,7 +152,7 @@ public class ListGenerator {
         code.notEqualLines.add("");
         code.notEqualLines.add("return true;");
 
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             CppCode.addClassWrapper(fullClassName, code);
         } else if (codeType == CodeLines.CodeType.JAVA) {
             JavaCode.addClassWrapper(fullClassName, code);
@@ -523,7 +523,7 @@ public class ListGenerator {
     }
 
     private void generateListInstance(String parentClassName, String shortClassName, int pvIndex, CodeLines code) {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             generateListInstanceCpp(parentClassName, shortClassName, pvIndex, code);
         } else if (codeType == CodeLines.CodeType.JAVA) {
             generateListInstanceJava(parentClassName, shortClassName, pvIndex, code);
@@ -1235,7 +1235,7 @@ public class ListGenerator {
      * @param code
      */
     private void generateListVector(String parentClassName, String shortClassName, int pvIndex, CodeLines code) {
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             generateListVectorCpp(parentClassName, shortClassName, pvIndex, code);
         } else if (codeType == CodeLines.CodeType.JAVA) {
             generateListVectorJava(parentClassName, shortClassName, pvIndex, code);

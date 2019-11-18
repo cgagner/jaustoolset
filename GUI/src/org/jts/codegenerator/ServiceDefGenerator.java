@@ -73,7 +73,7 @@ public class ServiceDefGenerator
 		this.sSet = sSet;
 		
 		/// Makes the namespace for the Generated Service
-                if (codeType == CodeLines.CodeType.C_PLUS_PLUS){
+                if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11){
                     namespace = CppCode.makeNamespace(sDef.getId(), sDef.getVersion());
                 }
                 else if (codeType == CodeLines.CodeType.JAVA){
@@ -104,6 +104,10 @@ public class ServiceDefGenerator
 		{
                     runCPP(outDir);
 		}
+                else if(codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
+                {
+                    runCPP11(outDir);
+                }
                 else if (codeType == CodeLines.CodeType.JAVA)
 		{
                     runJava(outDir, cmptName);
@@ -169,6 +173,316 @@ public class ServiceDefGenerator
          * Generate the C++ code
          */
         public void runCPP(String outDir) throws CodeGeneratorException
+        {
+            // We want the Service to be within a subfolder within the outDir
+            String includeDir = outDir + "/include/" + namespace;
+            String srcDir = outDir + "/src/" + namespace;
+
+            // Create the directories for this service
+            File tempDir = new File(includeDir);
+            if (!tempDir.exists())
+            {
+
+                if (!tempDir.mkdirs())
+                {
+                    throw new CodeGeneratorException("ServiceDefGenerator: Could not create Service src directory");
+                }
+            }
+
+            tempDir = new File(srcDir);
+            if(!tempDir.exists())
+            {
+
+                if (!tempDir.mkdirs())
+                {
+                    throw new CodeGeneratorException("ServiceDefGenerator: Could not create Service include directory");
+                }
+            }
+
+            try
+            {
+                StringBuffer incBuf;
+                String incName;
+                File msgSet;
+                StringBuffer strBuf;
+
+                /*
+                * Generate the constants file
+                */
+                ConstantsGenerator cGen = new ConstantsGenerator(codeType, sDef.getDeclaredConstSet());
+                cGen.run(outDir);
+
+                /*
+                 * Generate the MessageSet
+                 */
+                MessageSetGenerator msGen = new MessageSetGenerator(codeType, sDef.getMessageSet());
+                msGen.run(namespace, outDir);
+
+                /// Move the files
+                Vector<String> msgInputList = msGen.getInputMsgNameList();
+                Vector<String> msgOutputList = msGen.getOutputMsgNameList();
+                Vector<String> msgList = new Vector<String>();
+                msgList.addAll(msgInputList);
+                msgList.addAll(msgOutputList);
+                incBuf = new StringBuffer();
+                tempDir = new File(includeDir + "/Messages");
+                tempDir.mkdir();
+                for (File src : tempDir.listFiles())
+                {
+                    if (!src.isDirectory() && msgList.contains(src.getName().substring(0, src.getName().length() - 2)))
+                    {
+                        incBuf.append("#include \"" + src.getName() + "\"").append(System.getProperty("line.separator"));
+                    }
+                }
+
+
+                /// Create the MessageSet.h file
+                incName = "MessageSet";
+                msgSet = new File(includeDir + "/Messages/" + incName + ".h");
+                strBuf = new StringBuffer();
+                strBuf.append("#ifndef " + namespace.toUpperCase() + "_" + incName.toUpperCase()).append(System.getProperty("line.separator"));
+                strBuf.append("#define " + namespace.toUpperCase() + "_" + incName.toUpperCase()).append(System.getProperty("line.separator"));
+                strBuf.append(System.getProperty("line.separator"));
+                strBuf.append(incBuf);
+                strBuf.append(System.getProperty("line.separator"));
+                strBuf.append("#endif //" + namespace.toUpperCase() + "_" + incName.toUpperCase()).append(System.getProperty("line.separator"));
+                Util.writeContents(msgSet, strBuf.toString());
+
+
+                /*
+                 * Generate the InternalEventSet
+                 */
+                InternalEventsSetGenerator iesGen = new InternalEventsSetGenerator(codeType, sDef, sSet);
+                iesGen.run(namespace, outDir);
+
+                /// Get a list of all the files
+                Vector<String> ieList = iesGen.getInternalEventNameList();
+                incBuf = new StringBuffer();
+                tempDir = new File(includeDir + "/InternalEvents");
+                tempDir.mkdir();
+                for (File src : tempDir.listFiles())
+                {
+                    if (!src.isDirectory() && ieList.contains(src.getName().substring(0, src.getName().length() - 2)))
+                    {
+                        incBuf.append("#include \"" + src.getName() + "\"").append(System.getProperty("line.separator"));
+                    }
+                }
+
+                /// Create the InternalEventsSet.h file
+                incName = "InternalEventsSet";
+                msgSet = new File(includeDir + "/InternalEvents/" + incName + ".h");
+                strBuf = new StringBuffer();
+                strBuf.append("#ifndef " + namespace.toUpperCase() + "_" + incName.toUpperCase()).append(System.getProperty("line.separator"));
+                strBuf.append("#define " + namespace.toUpperCase() + "_" + incName.toUpperCase()).append(System.getProperty("line.separator"));
+                strBuf.append(System.getProperty("line.separator"));
+                strBuf.append(incBuf);
+                strBuf.append(System.getProperty("line.separator"));
+                strBuf.append("#endif //" + namespace.toUpperCase() + "_" + incName.toUpperCase()).append(System.getProperty("line.separator"));
+                Util.writeContents(msgSet, strBuf.toString());
+
+                /*
+                 * Generate the ProtocolBehavior State Machines
+                 */
+                try
+                {
+                    org.jts.codegenerator.ProtocolBehaviorGenerator pbGen = new org.jts.codegenerator.ProtocolBehaviorGenerator(namespace, codeType, outDir, sDef, sSet, new StringBuffer());
+                    
+                    /*
+                     * Generate the Service Files
+                     */
+                    StringBuffer smVariableList = new StringBuffer();
+                    StringBuffer smIncludeList = new StringBuffer();
+                    StringBuffer smAssignmentList = new StringBuffer();
+                    StringBuffer smDestructorList = new StringBuffer();
+                    StringBuffer svcMsgList = new StringBuffer();
+                    StringBuffer smArguments = new StringBuffer();
+					StringBuffer smParentList = new StringBuffer();
+                    StringBuffer smFSMList = new StringBuffer();
+                    StringBuffer smTransportType = new StringBuffer();
+
+                    // Get the list of parent services
+                    Vector<Reference> parentList = new Vector<Reference>();
+                    org.jts.codegenerator.support.InheritanceHelper.getParentServiceList( 
+                                       codeType, sSet, sDef, parentList);
+                                       
+                    // For each parent reference, add an include and constructor pointer
+                    for (Reference ref : parentList)
+                    {                   
+						// Add this service to the constructor and include list
+						smParentList.append(", " + ref.namespace + "::" + ref.name + "* p" + ref.name);
+						smIncludeList.append("#include \"" + ref.namespace + "/" + ref.name + ".h\"");
+						smIncludeList.append(System.getProperty("line.separator"));
+					}
+
+                    for (String smName : pbGen.getStateMachineNames())
+                    {
+                        // Get any parent FSMs and restructure into a parameter list
+						Vector<Reference> fsmList = new Vector<Reference>();
+						org.jts.codegenerator.support.InheritanceHelper.getParentFSMList( 
+															codeType, smName, sSet, sDef, fsmList);
+				        StringBuffer fsmParameters = new StringBuffer();
+                        for (Reference ref : fsmList)
+                        {
+                            if (fsmParameters.length() != 0) fsmParameters.append(", ");
+                            fsmParameters.append("p" + ref.owner + "->p" + ref.name);
+                        }
+															
+				        // Each FSM is stored as a member variable for the service
+                        smVariableList.append("\t" + smName + "* p" + smName + ";");
+                        smVariableList.append(System.getProperty("line.separator"));
+                        smIncludeList.append("#include \"" + smName + ".h\"");
+                        smIncludeList.append(System.getProperty("line.separator"));
+                        smDestructorList.append("\tdelete p" + smName + ";" );
+                        smDestructorList.append(System.getProperty("line.separator"));
+                        
+                        // When constructing each FSM, we also need to pass a pointer to all parent FSMs
+                        smAssignmentList.append("\tp" + smName + " = new " + smName + "(" + fsmParameters + ");");
+                        smAssignmentList.append(System.getProperty("line.separator"));
+                        smAssignmentList.append("\tp" + smName + "->setHandlers(ieHandler, jausRouter);");
+                        smAssignmentList.append(System.getProperty("line.separator"));
+                        smAssignmentList.append("\tp" + smName + "->setupNotifications();");
+                        smAssignmentList.append(System.getProperty("line.separator"));
+                    }
+
+                    // Specify the transport type...
+                    ServiceDef top = org.jts.codegenerator.support.InheritanceHelper.getTopParent( sDef, sSet );
+                    if ( top.getId().equalsIgnoreCase("urn:jaus:jss:core:Transport") &&
+                         top.getVersion().equals("1.1") )
+                    {
+                        smTransportType.append("JausRouter::Version_1_1");
+                    }
+                    else
+                    {
+                        smTransportType.append("JausRouter::Version_1_0");
+                    }
+
+                    // Set-up the template replacement hash table.
+                    replaceTable.put("%statemachine_variable_list%", smVariableList.toString());
+					replaceTable.put("%parent_service_list%", smParentList.toString());
+                    replaceTable.put("%statemachine_args%", smArguments.toString());
+                    replaceTable.put("%statemachine_include_list%", smIncludeList.toString());
+                    replaceTable.put("%statemachine_destruction_list%", smDestructorList.toString());
+                    replaceTable.put("%statemachine_assignment_list%", smAssignmentList.toString());
+                    replaceTable.put("%start_state_actions%", pbGen.entryActionCalls.toString());
+                    replaceTable.put("%transition_calls%", getTransitionCallsWithParameters(pbGen, srcDir));
+					replaceTable.put("%default_transition_calls%", pbGen.defaultCalls.toString());
+                    replaceTable.put("%service_transport_type%", smTransportType.toString());
+
+                    svcMsgList.append("\t/// Input Messages").append(System.getProperty("line.separator"));;
+                    for (String msg : msgInputList)
+                    {
+                        svcMsgList.append("\tm_InputMessageList.insert(" + msg + "::ID);");
+                        svcMsgList.append(System.getProperty("line.separator"));
+                    }
+                    svcMsgList.append(System.getProperty("line.separator"));
+                    svcMsgList.append("\t/// Output Messages").append(System.getProperty("line.separator"));;
+                    for (String msg : msgOutputList)
+                    {
+                        svcMsgList.append("\tm_OutputMessageList.insert(" + msg + "::ID);");
+                        svcMsgList.append(System.getProperty("line.separator"));
+                    }
+                    replaceTable.put("%service_message_list%", svcMsgList.toString());
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    throw new CodeGeneratorException(e.getMessage() + " Error with ProtocolBehaviorGenerator [SDG]");
+                }
+
+
+                /*
+                 * Generate the code and template for the service
+                 */
+                TemplateHandler tplHandler = new TemplateHandler(replaceTable);
+                // Handle Eclipse plugin's relative paths
+                File templateDir;
+                if(new File("plugins/org.jts.eclipse.data_1.0/templates").exists())
+                {
+                    templateDir = new File("plugins/org.jts.eclipse.data_1.0/templates/service");
+                }else
+                {
+                    templateDir = new File("templates/service");
+                }
+                boolean validFile = false;
+
+                for (File template : templateDir.listFiles(new FileExtensionFilter("tpl")))
+                {
+                    String destFileName = tplHandler.adjustString(template.getName().substring(0, template.getName().length() - CROP_TPL_NAME));
+                    File dest = null;
+
+                    if (destFileName.endsWith(".h"))
+                    {
+                        validFile = true;
+                        dest = new File(includeDir + "/" + destFileName);
+                        if (dest.exists())
+                        {
+                            dest.renameTo(new File(includeDir + "/" + destFileName + ".old"));
+                            dest = new File(includeDir + "/" + destFileName);
+                        }
+                    }
+                    else if (destFileName.endsWith(".cpp"))
+                    {
+                        validFile = true;
+                        dest = new File(srcDir + "/" + destFileName);
+                        if (dest.exists())
+                        {
+                            dest.renameTo(new File(srcDir + "/" + destFileName + ".old"));
+                            dest = new File(srcDir + "/" + destFileName);
+                        }
+                    }
+                    else if(destFileName.endsWith(".cs") || destFileName.endsWith(".java"))
+                    {
+                        // Do nothing. These files aren't needed.
+                        validFile = false;
+                    }
+                    else
+                    {
+                        validFile = true;
+                        dest = new File(outDir + "/" + namespace + "/" + destFileName);
+                        if (dest.exists())
+                        {
+                            dest.renameTo(new File(outDir + "/" + namespace + "/" + destFileName + ".old"));
+                            dest = new File(outDir + "/" + namespace + "/" + destFileName);
+                        }
+                    }
+
+                    try
+                    {
+                        if(validFile)
+                        {
+                            Util.copyFile(template, dest);
+                            tplHandler.adjustFile(dest);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new CodeGeneratorException("Could not Copy File [SDG]");
+                    }
+                }
+
+				SconstructGenerator sconGen = new SconstructGenerator();
+
+                /// Get the list of parent services.... these are required libraries for linking
+                Vector<String> libs = new Vector<String>();
+				Vector<Reference> parentList = new Vector<Reference>();
+				org.jts.codegenerator.support.InheritanceHelper.getParentServiceList( codeType, sSet, sDef, parentList );
+				for (int i=parentList.size(); i > 0; i--)
+					libs.add( parentList.get(i-1).namespace + "/lib/" + parentList.get(i-1).name );
+				
+                /// Generate the Sconstruct File
+                Util.writeContents(new File(srcDir + "/Sconstruct"), sconGen.generateLibrary(new File(srcDir), Util.upperCaseFirstLetter(serviceName), libs));
+            }
+            catch (Exception e)
+            {
+                    throw new CodeGeneratorException(e.getMessage() + "Could not generate Sconstruct file for Service [SDG]");
+            }
+        }
+        
+        /*
+         * @param outDir
+         * Generate the C++ code
+         */
+        public void runCPP11(String outDir) throws CodeGeneratorException
         {
             // We want the Service to be within a subfolder within the outDir
             String includeDir = outDir + "/include/" + namespace;
@@ -525,12 +839,12 @@ public class ServiceDefGenerator
                 TemplateHandler tplHandler = new TemplateHandler(replaceTable);
                 // Handle Eclipse plugin's relative paths
                 File templateDir;
-                if(new File("plugins/org.jts.eclipse.data_1.0/templates").exists())
+                if(new File("plugins/org.jts.eclipse.data_1.0/templates/service-cpp11").exists())
                 {
-                    templateDir = new File("plugins/org.jts.eclipse.data_1.0/templates/service");
+                    templateDir = new File("plugins/org.jts.eclipse.data_1.0/templates/service-cpp11");
                 }else
                 {
-                    templateDir = new File("templates/service");
+                    templateDir = new File("templates/service-cpp11");
                 }
                 boolean validFile = false;
 

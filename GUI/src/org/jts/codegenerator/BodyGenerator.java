@@ -81,7 +81,7 @@ public class BodyGenerator
 
         if (isNested) {
             fullClassName = "";
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 fullClassName = parentClassName + "::" + msgBody.getName();
                 shortClassName = CppCode.getShortClassName(fullClassName);
             } else if (codeType == CodeLines.CodeType.JAVA) {
@@ -137,7 +137,7 @@ public class BodyGenerator
          * Create framework for parent reference
          * Create a dummy function so that sub elements can use the same method call until this root is hit
          */
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             CppCode.addReferenceSetParentPresenceVector(code, fullClassName);
         }
         else if (codeType == CodeLines.CodeType.JAVA) {
@@ -172,7 +172,7 @@ public class BodyGenerator
 	        code.notEqualLines.addAll(methodCode);
 
             String varName = "";
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                 /// If isNested then we create a wrapper around all the code generated
                 CppCode.addClassWrapper(fullClassName, code);
 

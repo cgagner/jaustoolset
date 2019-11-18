@@ -77,13 +77,18 @@ public class TestCodegenOutputOptionsDialog {
         CodegenOutputOptionsDialog dialog3 = new CodegenOutputOptionsDialog(null,
                 new File(System.getProperty("user.home")), CodeType.JAVA, BuildType.SCONS);
 
+        CodegenOutputOptionsDialog dialog4 = new CodegenOutputOptionsDialog(null, 
+                new File("\\projects\\"), CodeType.C_PLUS_PLUS_11, BuildType.SCONS);
+        
         showDialogPrintResults(dialog1);
         showDialogPrintResults(dialog2);
         showDialogPrintResults(dialog3);
+        showDialogPrintResults(dialog4);
 
         dialog1.dispose();
         dialog2.dispose();
         dialog3.dispose();
+        dialog4.dispose();
     }
 
     public static void main(String args[]) {

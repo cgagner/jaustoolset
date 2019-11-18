@@ -96,7 +96,7 @@ public class ScaleRangeGenerator
             String min = scaleRange.getRealLowerLimit().replaceAll("\\,", "");
             String max = scaleRange.getRealUpperLimit().replaceAll("\\,", "");
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
 				if ( !min.contains(".") ) min = min.concat( ".0" );
 				if ( !max.contains(".") ) max = max.concat( ".0" );
@@ -137,7 +137,7 @@ public class ScaleRangeGenerator
             String min = scaleRange.getRealLowerLimit().replaceAll("\\,", "");
             String max = scaleRange.getRealUpperLimit().replaceAll("\\,", "");
 
-            if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
 					String minX = min;
 
@@ -275,7 +275,7 @@ public class ScaleRangeGenerator
             String above = Double.toString(maxNum +  midNum);
             String mid = Double.toString(midNum);
 
-            if (codeType ==  CodeLines.CodeType.C_PLUS_PLUS)
+            if (codeType ==  CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
         	if (instName == null)
         	{

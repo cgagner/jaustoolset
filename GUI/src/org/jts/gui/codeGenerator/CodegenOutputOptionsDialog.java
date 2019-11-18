@@ -89,6 +89,8 @@ public class CodegenOutputOptionsDialog extends javax.swing.JDialog {
             case JAVA:
                 javaRadioButton.setSelected(true);
                 break;
+            case C_PLUS_PLUS_11:
+                cpp11RadioButton.setSelected(true);
             default:
                 throw new RuntimeException("Unexpected value of output language enum");
         }
@@ -168,6 +170,7 @@ public class CodegenOutputOptionsDialog extends javax.swing.JDialog {
         sconsRadioButton = new javax.swing.JRadioButton();
         vsRadioButton = new javax.swing.JRadioButton();
         jLabel3 = new javax.swing.JLabel();
+        cpp11RadioButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -244,45 +247,52 @@ public class CodegenOutputOptionsDialog extends javax.swing.JDialog {
 
         jLabel3.setText("Select Build Type:");
 
+        languageButtonGroup.add(cpp11RadioButton);
+        cpp11RadioButton.setText("C++11");
+        cpp11RadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cpp11RadioButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
+            .addComponent(jSeparator1)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(outputDirField, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(browseButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(useLastButton)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(cppRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(csharpRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(javaRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sconsRadioButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(vsRadioButton)
-                        .addGap(112, 112, 112)
-                        .addComponent(generateButton)
+                        .addContainerGap()
+                        .addComponent(outputDirField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
+                        .addComponent(browseButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(useLastButton))
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cppRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(csharpRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(javaRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cpp11RadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(sconsRadioButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(vsRadioButton)
+                                .addGap(112, 112, 112)
+                                .addComponent(generateButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cancelButton))
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(287, 287, 287)))
+                            .addComponent(jLabel3))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -301,7 +311,8 @@ public class CodegenOutputOptionsDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cppRadioButton)
                     .addComponent(csharpRadioButton)
-                    .addComponent(javaRadioButton))
+                    .addComponent(javaRadioButton)
+                    .addComponent(cpp11RadioButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -333,6 +344,8 @@ public class CodegenOutputOptionsDialog extends javax.swing.JDialog {
                 selectedOutputLanguage = CodeLines.CodeType.C_SHARP;
             } else if (javaRadioButton.isSelected()) {
                 selectedOutputLanguage = CodeLines.CodeType.JAVA;
+            } else if (cpp11RadioButton.isSelected()) {
+                selectedOutputLanguage = CodeLines.CodeType.C_PLUS_PLUS_11;
             } else {
                 throw new RuntimeException("No radio button was selected when user clicked 'Generate'.");
             }
@@ -397,10 +410,16 @@ public class CodegenOutputOptionsDialog extends javax.swing.JDialog {
         vsRadioButton.setVisible( false );      
     }//GEN-LAST:event_javaRadioButtonActionPerformed
 
+    private void cpp11RadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpp11RadioButtonActionPerformed
+        sconsRadioButton.setSelected( true );
+        vsRadioButton.setVisible( false );
+    }//GEN-LAST:event_cpp11RadioButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.ButtonGroup buildGroup;
     protected javax.swing.JButton cancelButton;
+    private javax.swing.JRadioButton cpp11RadioButton;
     private javax.swing.JRadioButton cppRadioButton;
     private javax.swing.JRadioButton csharpRadioButton;
     protected javax.swing.JButton generateButton;

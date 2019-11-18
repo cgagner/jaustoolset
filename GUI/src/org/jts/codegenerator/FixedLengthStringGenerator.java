@@ -80,7 +80,7 @@ public class FixedLengthStringGenerator
 		 methodCode = new Vector<String>();
 		 methodParam = new Vector<String>();
 		 stringLength = fixedLengthString.getStringLength();
-         if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+         if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
          {
              variableType = "jFixedLengthString";
              variableTypeDecoding = "char";
@@ -114,7 +114,7 @@ public class FixedLengthStringGenerator
 		 methodCode = new Vector<String>();
 		 methodParam = new Vector<String>();
 		 stringLength = fixedLengthString.getStringLength();
-         if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+         if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
          {
              variableType = "jFixedLengthString";
              variableTypeDecoding = "char";
@@ -152,7 +152,7 @@ public class FixedLengthStringGenerator
 	 */
 	public void run(String parentClassName, int pvIndex, boolean isNested, CodeLines code) throws CodeGeneratorException
 	{
-		if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+		if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		{			
 			if (isNested)
 			{
@@ -289,7 +289,7 @@ public class FixedLengthStringGenerator
 	 */
     private void generateFieldInstance(int pvIndex, CodeLines code) throws CodeGeneratorException
     {
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.protectedAttributes.add(CppCode.createVariableDeclaration(variableType, fieldName, false));
             code.constructorLines.add(variableName + ".setSize(" + stringLength + ");");
@@ -329,7 +329,7 @@ public class FixedLengthStringGenerator
     	methodCode.clear();
         /// GetSize method
         /// only add size of array if optional is true
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add("size += " + stringLength + ";");
             if (fixedLengthString.isOptional())
@@ -364,7 +364,7 @@ public class FixedLengthStringGenerator
 	    {
 	    	methodCode.clear();
 
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", fieldName + "Valid", null, true));
 
@@ -395,7 +395,7 @@ public class FixedLengthStringGenerator
     	methodCode.clear();
     	
         //For Encoding
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(variableType + " " + tempVariableName + "(" + stringLength +");");
             methodCode.add("");
@@ -445,7 +445,7 @@ public class FixedLengthStringGenerator
     	methodCode.clear();
     	
         //For Decoding
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(variableTypeDecoding + " " + tempVariableName + "[" + stringLength +"];");
             methodCode.add("");
@@ -509,7 +509,7 @@ public class FixedLengthStringGenerator
     	methodCode.clear();
     	
         //Generates the getMethod Declaration and Definition
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, null, false));	//should this be fixed length string
         
@@ -534,7 +534,7 @@ public class FixedLengthStringGenerator
     	methodParam.clear();
     	
         //Generate SetMethod Declaration and Definition for a string
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("std::string value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, methodParam, false));
@@ -591,7 +591,7 @@ public class FixedLengthStringGenerator
     	methodParam.clear();
     	
         //Generate SetMethod Declaration and Definition for a jFixedLengthString
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodParam.add("jFixedLengthString value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, methodParam, false));
@@ -634,7 +634,7 @@ public class FixedLengthStringGenerator
     
     private void generateInstanceOverloadIsEqualMethod(CodeLines code)
     {
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /// Overload operator==
             code.equalLines.add("if (" + variableName + " != value." + variableName + ")");
@@ -660,7 +660,7 @@ public class FixedLengthStringGenerator
     
     private void generateInstanceOverloadNotEqualsMethod(CodeLines code)
     {
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             /// Overload operator!=
             code.notEqualLines.add("if (" + variableName + " == value." + variableName + ")");
@@ -703,7 +703,7 @@ public class FixedLengthStringGenerator
         int arraySize = 1;
 
         paramCode.clear();
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             for (int i = 0; i < dimList.size(); i++)
             {
@@ -901,7 +901,7 @@ public class FixedLengthStringGenerator
 	{
 	    /// GetSize method
 	    /// only add size of array if optional is true
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                 methodCode.clear();
                 methodCode.add("size += (" + stringLength + " * " + arraySize + ");");
@@ -937,7 +937,7 @@ public class FixedLengthStringGenerator
 	    /// return true if field is set in presence vector
 	    if (fixedLengthString.isOptional()) 
 	    {
-                if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+                if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
                 {
                     code.publicMethods.add(CppCode.createMethodDeclaration("bool", "is", fieldName + "Valid", null, true));
                     methodCode.clear();
@@ -969,7 +969,7 @@ public class FixedLengthStringGenerator
 	{
             //For Encoding
             methodCode.clear();
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 methodCode.add(variableType + " " + tempVariableName + "(" + stringLength +");");
                 methodCode.add("");
@@ -1033,7 +1033,7 @@ public class FixedLengthStringGenerator
 	{
         //For Decoding
         methodCode.clear();
-        if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+        if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
             methodCode.add(variableTypeDecoding + " " + tempVariableName + "[" + stringLength +"];");
             methodCode.add("");
@@ -1098,7 +1098,7 @@ public class FixedLengthStringGenerator
 	private void generateArrayGetMethod(CodeLines code, String posCalc, Vector<String> paramCode, Vector<String> getMethodCode)
 	{
         //Generates the getMethod Declaration and Definition
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramCode, false));
 
@@ -1139,7 +1139,7 @@ public class FixedLengthStringGenerator
 	private void generateArraySetStringMethod(CodeLines code, String posCalc, int pvIndex, Vector<String> paramCode, Vector<String> setMethodCode)
 	{
             //Generate SetMethod Declaration and Definition for a string
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 paramCode.add("std::string value");	//can I use this or does it need to be a char*
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, paramCode, false));
@@ -1202,7 +1202,7 @@ public class FixedLengthStringGenerator
 	{
             //Generate SetMethod Declaration and Definition for a jFixedLengthString
             paramCode.remove(paramCode.size() - 1);            
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 paramCode.add("jFixedLengthString value");
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, paramCode, false));
@@ -1236,7 +1236,7 @@ public class FixedLengthStringGenerator
 	private void generateArrayOverloadAssignmentMethod(CodeLines code, int arraySize)
 	{
             /// Overload the operator=
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.assignmentLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
                 code.assignmentLines.add("{");
@@ -1262,7 +1262,7 @@ public class FixedLengthStringGenerator
 	private void generateArrayOverloadIsEqualMethod(CodeLines code, int arraySize)
 	{
             /// Overload operator==
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.equalLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
                 code.equalLines.add("{");
@@ -1291,7 +1291,7 @@ public class FixedLengthStringGenerator
 	private void generateArrayOverloadNotEqualMethod(CodeLines code, int arraySize)
 	{
             /// Overload operator!=
-            if(codeType == CodeLines.CodeType.C_PLUS_PLUS)
+            if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 code.notEqualLines.add("for (unsigned int i = 0; i < " + arraySize + "; i++)");
                 code.notEqualLines.add("{");

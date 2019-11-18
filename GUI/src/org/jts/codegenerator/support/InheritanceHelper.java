@@ -388,7 +388,7 @@ public class InheritanceHelper {
 
 	public static void generateGuardAutoImplementation( StringBuffer implementation, String method, String parent, CodeLines.CodeType codeType )
 	{
-		if ((parent != null) && (codeType == CodeLines.CodeType.C_PLUS_PLUS))
+		if ((parent != null) && (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11))
 		{
 			implementation.append("\t//// By default, inherited guards call the parent function.").append(System.getProperty("line.separator"));
 			implementation.append("\t//// This can be replaced or modified as needed.").append(System.getProperty("line.separator"));
@@ -440,7 +440,7 @@ public class InheritanceHelper {
 			// Add a comma to separate parameters
 			if (!firstParam) ret += ", "; firstParam = false;
 
-			if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+			if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 			{
 				// If this is not a simple type (or a send/receive type), we
 				// need to cast to the target's namespace
@@ -536,7 +536,7 @@ public class InheritanceHelper {
 
 	protected static boolean isParamTypeSimpleOrSendReceive( String type,  CodeLines.CodeType codeType)
 	{
-	    if (codeType == CodeLines.CodeType.C_PLUS_PLUS)
+	    if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
 		{
 			if ((type.compareTo("Send") == 0) || (type.compareTo("Receive") == 0) ||
 			    type.startsWith("Send::") || type.startsWith("Receive::") ||

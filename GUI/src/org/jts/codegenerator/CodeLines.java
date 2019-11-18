@@ -42,7 +42,7 @@ import java.util.Vector;
 
 public class CodeLines 
 {
-	public enum CodeType { C_PLUS_PLUS, JAVA, C_SHARP }
+	public enum CodeType { C_PLUS_PLUS, JAVA, C_SHARP, C_PLUS_PLUS_11 }
 	public enum BuildType { SCONS, VS }
 	
 	private CodeType codeType;

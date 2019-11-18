@@ -130,9 +130,9 @@ public class InternalEventsSetGenerator
                 } else {
                     // Generate internal event normally
 
-                    if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+                    if (codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
                         
-                        // For C++, only run the event generator if the event
+                        // For C++11, only run the event generator if the event
                         // is not defined by the parent service.
                         
                         boolean isInherited = false;
