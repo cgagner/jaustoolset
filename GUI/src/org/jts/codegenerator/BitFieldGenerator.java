@@ -332,7 +332,7 @@ public class BitFieldGenerator //extends FieldClass
 
         if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
-            code.publicMethods.add(CppCode.createMethodDeclaration(bfType, "get", subFieldName, methodParam, false));
+            code.publicMethods.add(CppCode.createMethodDeclaration(bfType, "get", subFieldName, methodParam, true));
 
             methodCode.add("std::bitset<sizeof(" + bfType + ") * 8> bfbs((int)m_SubFields);");
             methodCode.add("std::bitset<" + size +"> sfbs;");
@@ -344,7 +344,7 @@ public class BitFieldGenerator //extends FieldClass
             methodCode.add("}");
             methodCode.add("");
             methodCode.add("return (" + bfType + ")(sfbs.to_ulong());");
-            code.methods.addAll(CppCode.createMethodDefinition(bfType, fullClassName + "::get", subFieldName, methodParam, methodCode, false));
+            code.methods.addAll(CppCode.createMethodDefinition(bfType, fullClassName + "::get", subFieldName, methodParam, methodCode, true));
         }
         else if(codeType == CodeLines.CodeType.JAVA)
         {

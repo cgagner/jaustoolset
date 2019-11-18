@@ -154,16 +154,16 @@ public class PresenceVectorGenerator
         /* Create the get Method Declaration and Definitions */
         methodCode.clear();
         methodParam.clear();
-        code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, methodParam, false));
+        code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, methodParam, true));
 
         methodCode.add("return " + variableName + ";");
         if (isNested)
         {
-            code.methods.addAll(CppCode.createMethodDefinition(variableType, className + "::get", fieldName, methodParam, methodCode, false));
+            code.methods.addAll(CppCode.createMethodDefinition(variableType, className + "::get", fieldName, methodParam, methodCode, true));
         }
         else
         {
-            code.methods.addAll(CppCode.createMethodDefinition(variableType, "get", fieldName, methodParam, methodCode, false));
+            code.methods.addAll(CppCode.createMethodDefinition(variableType, "get", fieldName, methodParam, methodCode, true));
         }
 
         /* Create the set Method Declaration and Definitions */

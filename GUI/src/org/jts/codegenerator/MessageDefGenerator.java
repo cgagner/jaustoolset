@@ -92,6 +92,9 @@ public class MessageDefGenerator {
 
                     /// Begin the messageId line
                     String messageIdLine = "static const int ID = 0x";
+                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+                        messageIdLine = "static constexpr int ID = 0x";
+                    }
                     String messageId = "";
 
                     /// Get the actual byte array from the messageDef xml function
@@ -109,7 +112,11 @@ public class MessageDefGenerator {
                     code.classDefinitions.add(messageIdLine);
                     code.classDefinitions.add("");
 
-                    code.publicMethods.add("unsigned int getID() { return ID; };");
+                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+                        code.publicMethods.add("unsigned int getID() const override { return ID; };");
+                    } else {
+                        code.publicMethods.add("unsigned int getID() const { return ID; };");
+                    }
 
                     /// Generate a header, passing the messageID
                     new HeaderGenerator(codeType, msgDef.getHeader()).run(fullClassName, headerIsNested, subCode, messageId);
@@ -130,7 +137,7 @@ public class MessageDefGenerator {
 
                 /// Initialize isCommand variable
                 code.constructorLines.add("m_IsCommand = " + String.valueOf(msgDef.isIsCommand() == null ? false : msgDef.isIsCommand()) + ";");
-
+                
                 includes.add("Messages/Message.h");
                 includes.add("JConstants.h");
                 baseClassList.add("public JTS::Message");

@@ -91,6 +91,7 @@ public class CodegenOutputOptionsDialog extends javax.swing.JDialog {
                 break;
             case C_PLUS_PLUS_11:
                 cpp11RadioButton.setSelected(true);
+                break;
             default:
                 throw new RuntimeException("Unexpected value of output language enum");
         }

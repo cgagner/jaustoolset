@@ -104,8 +104,14 @@ public class ScaleRangeGenerator
 	            String scaleFactor = "( " + max +  " - " + min + " ) / " + CppCode.getIntegerRange(fieldType);
 	            String bias = min;
 	
-	            strVector.add("double scaleFactor = " + scaleFactor + ";" );
-                    strVector.add("double bias = " + bias + ";");
+                    if(codeType == CodeLines.CodeType.C_PLUS_PLUS_11){
+                        strVector.add("constexpr double scaleFactor = " + scaleFactor + ";" );
+                        strVector.add("constexpr double bias = " + bias + ";");
+                    } else {
+                        strVector.add("const double scaleFactor = " + scaleFactor + ";" );
+                        strVector.add("const double bias = " + bias + ";");
+                    }
+	            
                     strVector.add("");
                     strVector.add(doubleVar + " = " + variableName + " * scaleFactor + bias;");
             }
@@ -155,10 +161,16 @@ public class ScaleRangeGenerator
                         integerFunction = "";
                     }
 		          
-                    strVector.add("double scaleFactor = " + scaleFactor + ";");
-                    strVector.add("double bias = " + bias + ";");
+                    if (codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+                    strVector.add("constexpr double scaleFactor = " + scaleFactor + ";");
+                    strVector.add("constexpr double bias = " + bias + ";");
+                    } else {
+                    strVector.add("const double scaleFactor = " + scaleFactor + ";");
+                    strVector.add("const double bias = " + bias + ";");
+                    }
                     strVector.add("");
                     strVector.add(variableName + "= (" + CppCode.getVariableType(fieldType) + ")" + integerFunction + "((" + doubleVar + " - bias) / scaleFactor);");
+                    
             }
             else if (codeType == CodeLines.CodeType.JAVA)
             {

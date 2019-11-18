@@ -468,11 +468,11 @@ public class VariableLengthStringGenerator
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // get declaration
-                code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, null, false));
+                code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, null, true));
 
                 // get method
                 methodCode.add("return " + CppCode.getVariableName(fieldName) + ";");
-                code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, null, methodCode, false));
+                code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, null, methodCode, true));
             }
             else if(codeType == CodeLines.CodeType.JAVA)
             {
@@ -497,7 +497,7 @@ public class VariableLengthStringGenerator
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 // set parameter
-                methodParam.add("jVariableLengthString value");
+                methodParam.add("const jVariableLengthString& value");
 
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, methodParam, false));
 
@@ -1026,11 +1026,11 @@ public class VariableLengthStringGenerator
 
         if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
             //Generates the getMethod Declaration and Definition
-            code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramsList, false));
+            code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramsList, true));
             methodCode.addAll(rangeCheckCode);
             methodCode.add("int index = " + posCalcExpr + ";");
             methodCode.add("return " + variableName + "[index];");
-            code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, paramsList, methodCode, false));
+            code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, paramsList, methodCode, true));
         } else if (codeType == CodeLines.CodeType.JAVA) {
             //Generates the getMethod Definition
             methodCode.addAll(rangeCheckCode);

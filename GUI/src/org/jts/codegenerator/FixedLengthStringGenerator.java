@@ -511,10 +511,10 @@ public class FixedLengthStringGenerator
         //Generates the getMethod Declaration and Definition
         if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
-            code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, null, false));	//should this be fixed length string
+            code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, null, true));	//should this be fixed length string
         
             methodCode.add("return " + CppCode.getVariableName(fieldName) + ";");
-            code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, null, methodCode, false)); //methodCode?? and prefix?
+            code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, null, methodCode, true)); //methodCode?? and prefix?
         }
         else if(codeType == CodeLines.CodeType.JAVA)
         {
@@ -536,7 +536,7 @@ public class FixedLengthStringGenerator
         //Generate SetMethod Declaration and Definition for a string
         if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
-            methodParam.add("std::string value");
+            methodParam.add("const std::string& value");   
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, methodParam, false));
 
             //method code
@@ -593,7 +593,7 @@ public class FixedLengthStringGenerator
         //Generate SetMethod Declaration and Definition for a jFixedLengthString
         if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
         {
-            methodParam.add("jFixedLengthString value");
+            methodParam.add("const jFixedLengthString& value");
             code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, methodParam, false));
         
             //method code
@@ -1100,14 +1100,14 @@ public class FixedLengthStringGenerator
         //Generates the getMethod Declaration and Definition
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
-                code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramCode, false));
+                code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramCode, true));
 
                 methodCode.clear();
                 methodCode.add("unsigned int index = " + posCalc + ";");
                 methodCode.add("");
                 methodCode.addAll(getMethodCode);
                 methodCode.add("return " + variableName + "[index];");
-                code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, paramCode, methodCode, false));
+                code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, paramCode, methodCode, true));
             }
             else if (codeType == CodeLines.CodeType.JAVA)
             {
@@ -1141,7 +1141,7 @@ public class FixedLengthStringGenerator
             //Generate SetMethod Declaration and Definition for a string
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
-                paramCode.add("std::string value");	//can I use this or does it need to be a char*
+                paramCode.add("const std::string& value");
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, paramCode, false));
 
                 //method code
@@ -1204,7 +1204,7 @@ public class FixedLengthStringGenerator
             paramCode.remove(paramCode.size() - 1);            
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
-                paramCode.add("jFixedLengthString value");
+                paramCode.add("const jFixedLengthString& value");
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, paramCode, false));
 
                 //method code

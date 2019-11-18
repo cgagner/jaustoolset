@@ -67,46 +67,20 @@ public class FixedFieldGenerator
 	/**
 	 * Constructor.
 	 * 
+         * @param codeType
 	 * @param fixedField
-	 * @param codeLines
 	 */
 	public FixedFieldGenerator(CodeLines.CodeType codeType, FixedField fixedField)
 	{
-		this.fixedField = fixedField;
-		this.codeType = codeType;
-		this.dimList = null;
-		
-		// temp code generation variables
-        methodCode = new Vector<String>();
-        methodParam = new Vector<String>();
-        fieldName = Util.upperCaseFirstLetter(fixedField.getName());
-
-        if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
-        {
-            variableName = CppCode.getVariableName(fieldName);
-            tempVariableName = variableName + "Temp";
-            variableType = CppCode.getVariableType(fixedField.getFieldType());
+            this(codeType, fixedField, null);
         }
-        else if (codeType == CodeLines.CodeType.JAVA)
-        {
-            variableName = JavaCode.getVariableName(fieldName);
-            tempVariableName = variableName + "Temp";
-            variableType = JavaCode.getVariableType(fixedField.getFieldType());
-            variableSigned = JavaCode.getVariableSign(fixedField.getFieldType());
-        }
-        else if (codeType == CodeLines.CodeType.C_SHARP)
-        {
-            variableName = CSharpCode.getVariableName(fieldName);
-            tempVariableName = variableName + "Temp";
-            variableType = CSharpCode.getVariableType(fixedField.getFieldType());
-        }
-    }
 
 	/**
 	 * Constructor.
 	 * 
+         * @param codeType
 	 * @param fixedField
-	 * @param codeLines
+         * @param dimList
 	 */
 	public FixedFieldGenerator(CodeLines.CodeType codeType, FixedField fixedField, List<Dimension> dimList)
 	{
@@ -512,7 +486,7 @@ public class FixedFieldGenerator
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
                 ///  Generate getMethod Declaration and Definition
-                code.publicMethods.add(CppCode.createMethodDeclaration("double", "get", fieldName, null, false));
+                code.publicMethods.add(CppCode.createMethodDeclaration("double", "get", fieldName, null, true));
 
                 methodCode.add("double value;");
                 methodCode.add("");
@@ -520,8 +494,8 @@ public class FixedFieldGenerator
                 methodCode.add("");
                 methodCode.add("return value;");
 
-                code.methods.addAll(CppCode.createMethodDefinition("double", fullClassName + "::get", fieldName, methodParam, methodCode, false));
-            }
+                code.methods.addAll(CppCode.createMethodDefinition("double", fullClassName + "::get", fieldName, methodParam, methodCode, true));
+            } 
             else if(codeType == CodeLines.CodeType.JAVA)
             {
                 methodCode.add("double value;");
@@ -551,7 +525,7 @@ public class FixedFieldGenerator
             /* Create the get Method Declaration and Definitions */
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
-                code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, methodParam, false));
+                code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, methodParam, true));
 
             // Add the following to the C++ source file
             /* jUnsignedShortInteger SendRec::getDestSubsystemID()
@@ -560,8 +534,8 @@ public class FixedFieldGenerator
              * };
              */
                 methodCode.add("return " + variableName + ";");
-                code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, methodParam, methodCode, false));
-            }
+                code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, methodParam, methodCode, true));
+            } 
             else if(codeType == CodeLines.CodeType.JAVA)
             {
                 methodCode.add("return " + variableName + ";");
@@ -584,6 +558,8 @@ public class FixedFieldGenerator
 
             if (codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
+                methodParam.clear();
+                methodParam.add("const double& value");
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, methodParam, false));
             }
 
@@ -1141,7 +1117,7 @@ public class FixedFieldGenerator
             //methodParam.clear();
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
-		code.publicMethods.add(CppCode.createMethodDeclaration("double", "get", fieldName, paramCode, false));
+		code.publicMethods.add(CppCode.createMethodDeclaration("double", "get", fieldName, paramCode, true));
       
 		methodCode.add("double value;");
 		methodCode.add("unsigned int index = " + posCalc + ";");
@@ -1150,7 +1126,7 @@ public class FixedFieldGenerator
 		methodCode.add("");
 		methodCode.add("return value;");
 
-		code.methods.addAll(CppCode.createMethodDefinition("double", fullClassName + "::get", fieldName, paramCode, methodCode, false));
+		code.methods.addAll(CppCode.createMethodDefinition("double", fullClassName + "::get", fieldName, paramCode, methodCode, true));
             }
             else if(codeType == CodeLines.CodeType.JAVA)
             {
@@ -1181,9 +1157,10 @@ public class FixedFieldGenerator
             methodCode.clear();
 		
             ///  Generate setMethod Declaration and Definition
-            paramCode.add("double value");
+            
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
+                paramCode.add("const double& value");
                 code.publicMethods.add(CppCode.createMethodDeclaration("int", "set", fieldName, paramCode, false));
 
                 methodCode.add("unsigned int index = " + posCalc + ";");
@@ -1203,6 +1180,7 @@ public class FixedFieldGenerator
             }
             else if(codeType == CodeLines.CodeType.JAVA)
             {
+                paramCode.add("double value");
                 methodCode.add("int index = " + posCalc + ";");
                 methodCode.add("");
                 srGen.getDoubleToIntConversion(fixedField.getFieldType(), variableName + "[index]", "value", methodCode);
@@ -1218,6 +1196,7 @@ public class FixedFieldGenerator
             }
             else if(codeType == CodeLines.CodeType.C_SHARP)
             {
+                paramCode.add("double value");
                 methodCode.add("int index = " + posCalc + ";");
                 methodCode.add("");
                 srGen.getDoubleToIntConversion(fixedField.getFieldType(), variableName + "[index]", "value", methodCode);
@@ -1241,7 +1220,7 @@ public class FixedFieldGenerator
     //    	methodParam.clear();
             if(codeType == CodeLines.CodeType.C_PLUS_PLUS || codeType == CodeLines.CodeType.C_PLUS_PLUS_11)
             {
-                code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramCode, false));
+                code.publicMethods.add(CppCode.createMethodDeclaration(variableType, "get", fieldName, paramCode, true));
 
                 // Add the following to the C++ source file
                 /* jUnsignedShortInteger SendRec::getDestSubsystemID()
@@ -1252,7 +1231,7 @@ public class FixedFieldGenerator
                 methodCode.add("unsigned int index = " + posCalc + ";");
                 methodCode.add("");
                 methodCode.add("return " + variableName + "[index];");
-                code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, paramCode, methodCode, false));
+                code.methods.addAll(CppCode.createMethodDefinition(variableType, fullClassName + "::get", fieldName, paramCode, methodCode, true));
             }
             else if(codeType == CodeLines.CodeType.JAVA)
             {

@@ -362,7 +362,7 @@ public class CppCode
 //		if (!code.sizeLines.isEmpty())
 //		{
 			methodParam.clear();
-			code.publicMethods.add(CppCode.createMethodDeclaration("const unsigned int", "getSize", null,  methodParam, false));
+			code.publicMethods.add(CppCode.createMethodDeclaration("const unsigned int", "getSize", null,  methodParam, true));
 			
 			methodCode.clear();
 			methodCode.add("unsigned int size = 0;");
@@ -378,7 +378,7 @@ public class CppCode
 			code.methods.add(" * ");
 			code.methods.add(" * @return");
 			code.methods.add(" */");
-			code.methods.addAll(CppCode.createMethodDefinition("const unsigned int", fullClassName + "::getSize", null,  methodParam, methodCode, false));
+			code.methods.addAll(CppCode.createMethodDefinition("const unsigned int", fullClassName + "::getSize", null,  methodParam, methodCode, true));
 //		}		
 		
 		/// Add the encode Method
@@ -586,7 +586,7 @@ public class CppCode
 //		if (!code.sizeLines.isEmpty())
 //		{
 			methodParam.clear();
-			code.publicMethods.add(CppCode.createMethodDeclaration("const unsigned int", "getSize", null,  methodParam, false));
+			code.publicMethods.add(CppCode.createMethodDeclaration("const unsigned int", "getSize", null,  methodParam, true));
 			
 			methodCode.clear();
 			methodCode.add("unsigned int size = 0;");
@@ -602,7 +602,7 @@ public class CppCode
 			code.methods.add(" * ");
 			code.methods.add(" * @return");
 			code.methods.add(" */");
-			code.methods.addAll(CppCode.createMethodDefinition("const unsigned int", fullClassName + "::getSize", null,  methodParam, methodCode, false));
+			code.methods.addAll(CppCode.createMethodDefinition("const unsigned int", fullClassName + "::getSize", null,  methodParam, methodCode, true));
 //		}		
 		
 		/// Add the encode Method
@@ -611,7 +611,7 @@ public class CppCode
 			methodParam.clear();
 			methodParam.add("unsigned char *bytes");
 			code.publicMethods.add(CppCode.createMethodDeclaration("virtual void", "encode", null,  methodParam, false));
-			
+                      
 			methodCode.clear();
 			methodCode.add("");
 			methodCode.add("if (bytes == NULL)");
