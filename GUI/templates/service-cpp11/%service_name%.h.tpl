@@ -19,6 +19,12 @@ namespace %service_namespace%
 class DllExport %service_name% : public JTS::Service
 {
 public:
+	static const std::string Id;
+	static const std::string Version;
+	static constexpr jUnsignedByte MajorVersion = %service_major_version%;
+	static constexpr jUnsignedByte MinorVersion = %service_minor_version%;
+	
+
 	%service_name%( JTS::JausRouter* jausRouter %parent_service_list%);
 	virtual ~%service_name%();
 	

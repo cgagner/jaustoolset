@@ -5,10 +5,15 @@
 
 using namespace JTS;
 
+const std::string %service_namespace%::%service_name%::Id = "%service_id%";
+const std::string %service_namespace%::%service_name%::Version = "%service_version%";
+constexpr jUnsignedByte %service_namespace%::%service_name%::MajorVersion;
+constexpr jUnsignedByte %service_namespace%::%service_name%::MinorVersion;
+
 namespace %service_namespace%
 {
 	
-%service_name%::%service_name%(JTS::JausRouter* jausRouter %parent_service_list%) : Service()
+%service_name%::%service_name%(JTS::JausRouter* jausRouter %parent_service_list%) : Service(Id, MajorVersion, MinorVersion)
 {
 	jausRouter->setTransportType(%service_transport_type%);
 	
