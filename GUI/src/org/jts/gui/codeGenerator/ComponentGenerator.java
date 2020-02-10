@@ -39,6 +39,13 @@ import org.jts.codegenerator.CodeLines;
 import org.jts.gui.GUI;
 import org.jts.gui.util.GUISupport;
 
+import freemarker.template.*;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import org.jts.jsidl.binding.MessageDef;
+
 /* This class delegates the task of generating code to org.jts.codegenerator.ComponentGenerator
 */
 public class ComponentGenerator {
@@ -57,7 +64,7 @@ public class ComponentGenerator {
         }
 
         public void run() {
-            Context.getInstance().getViewMechanism().message("Starting code generation... ");
+            Context.getInstance().getViewMechanism().message("Component code generation... ");
 
             org.jts.codegenerator.ComponentGenerator cg =
                     new org.jts.codegenerator.ComponentGenerator(language, build);
@@ -80,10 +87,39 @@ public class ComponentGenerator {
                     org.jts.gui.jmatterToJAXB.ServiceSet.convert(ss);
 
             // call code generator
-            cg.run(path.getAbsolutePath(),
-                    component.getName().toString(),
-                    Integer.toString(component.getComponentId().intValue()),
-                    jaxbSS);
+//            cg.run(path.getAbsolutePath(),
+//                    component.getName().toString(),
+//                    Integer.toString(component.getComponentId().intValue()),
+//                    jaxbSS);
+
+            System.out.println("Running Code generator.");
+
+            try {
+              /* Create and adjust the configuration singleton */
+              Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
+              cfg.setDirectoryForTemplateLoading(new File("/tmp/"));
+              // Recommended settings for new projects:
+              cfg.setDefaultEncoding("UTF-8");
+              cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+              cfg.setLogTemplateExceptions(false);
+              cfg.setWrapUncheckedExceptions(true);
+              cfg.setFallbackOnNullLoopVariable(false);
+
+
+              Template temp = cfg.getTemplate("serviceset.ftl");
+
+              
+              
+              HashMap<String, org.jts.jsidl.binding.ServiceSet> ssmap = new HashMap();
+              ssmap.put("service_set", jaxbSS);
+              
+              Writer out = new OutputStreamWriter(System.out);
+              temp.process(ssmap, out);
+              
+              System.out.println("Finished generating code.");
+            } catch (Exception ex) {
+              System.out.println("Caught Exception: " + ex.getMessage());
+            }
 
             Context.getInstance().getViewMechanism().message("Code generation complete. ");
         }

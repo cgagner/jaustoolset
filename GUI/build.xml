@@ -25,6 +25,7 @@
     <property name="lib.cobertura.dir" value="${lib.basedir}/cobertura" />
     <property name="lib.cobertura.lib.dir" value="${lib.cobertura.dir}/lib" /> 
     <property name="lib.saxon.dir" value="${lib.basedir}/saxon" />
+    <property name="lib.freemarker.dir" value="${lib.basedir}/freemarker" />
 	<!-- Test directories -->
     <property name="test.dir" location="test" />
     <property name="test.src.dir" location="${test.dir}" />
@@ -61,6 +62,7 @@
         <fileset dir="${lib.jargs.dir}" includes="*.jar"/>
         <fileset dir="${lib.jep.dir}" includes="*.jar"/>
         <fileset dir="${lib.saxon.dir}" includes="*.jar"/>
+        <fileset dir="${lib.freemarker.dir}" includes="*.jar"/>
         <pathelement location="${build.classes.dir}" />
     </path>
     <path id="class.path">
@@ -75,6 +77,7 @@
         <fileset dir="${lib.cobertura.dir}" includes="*.jar"/>
         <fileset dir="${lib.cobertura.lib.dir}" includes="*.jar"/> 
         <fileset dir="${lib.saxon.dir}" includes="*.jar"/>
+        <fileset dir="${lib.freemarker.dir}" includes="*.jar"/>
         <fileset dir="${promela.dir}/dist" includes="*.jar" />
         <pathelement location="${build.classes.dir}" />
     </path>
@@ -356,6 +359,7 @@
             <fileset dir="${lib.basedir}" includes="jargs-1.0/" />
             <fileset dir="${lib.basedir}" includes="jep/" />
             <fileset dir="${lib.basedir}" includes="saxon/" />
+            <fileset dir="${lib.basedir}" includes="freemarker/" />
         </copy>
         <copy todir="${dist.dir}/templates">
             <fileset dir="${templates.dir}" includes="**/*" />
