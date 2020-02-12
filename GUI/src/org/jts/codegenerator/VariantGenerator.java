@@ -781,6 +781,13 @@ public class VariantGenerator
 
             methodCode.add("return &" + varName + ";");
             code.methods.addAll(CppCode.createMethodDefinition(fullClassName + "* const", parentClassName + "::get", shortClassName, methodParam, methodCode, false));
+            
+            ///  Generate const getMethod Declaration and Definition
+            methodParam.clear();
+            methodCode.clear();
+            code.publicMethods.add(CppCode.createMethodDeclaration("const " + shortClassName + "* const", "get", shortClassName, methodParam, true));
+            methodCode.add("return &" + varName + ";");
+            code.methods.addAll(CppCode.createMethodDefinition("const " + fullClassName + "* const", parentClassName + "::get", shortClassName, methodParam, methodCode, true));
         }
         else if (codeType == CodeLines.CodeType.JAVA)
         {
@@ -1239,6 +1246,14 @@ public class VariantGenerator
             code.publicMethods.add(CppCode.createMethodDeclaration(shortClassName + "* const", "get", "Element", methodParam, false));
             methodCode.add("return &" + varName + ".at(index);");
             code.methods.addAll(CppCode.createMethodDefinition(fullClassName + "* const", parentClassName + "::get", "Element", methodParam, methodCode, false));
+            
+            // Const version of getElement
+            methodCode.clear();
+            methodParam.clear();
+            methodParam.add("unsigned int " + "index");
+            code.publicMethods.add(CppCode.createMethodDeclaration("const " + shortClassName + "* const", "get", "Element", methodParam, true));
+            methodCode.add("return &" + varName + ".at(index);");
+            code.methods.addAll(CppCode.createMethodDefinition("const " + fullClassName + "* const", parentClassName + "::get", "Element", methodParam, methodCode, true));
         }
         else if (codeType == CodeLines.CodeType.JAVA)
         {

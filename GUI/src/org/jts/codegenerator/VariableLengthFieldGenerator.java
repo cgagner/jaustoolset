@@ -827,6 +827,13 @@ public class VariableLengthFieldGenerator {
 
             methodCode.add("return &" + varName + ";");
             code.methods.addAll(CppCode.createMethodDefinition(fullClassName + "* const", parentClassName + "::get", shortClassName, methodParam, methodCode, false));
+            
+            ///  Generate const getMethod Declaration and Definition
+            methodParam.clear();
+            methodCode.clear();
+            code.publicMethods.add(CppCode.createMethodDeclaration("const " + shortClassName + "* const", "get", shortClassName, methodParam, true));
+            methodCode.add("return &" + varName + ";");
+            code.methods.addAll(CppCode.createMethodDefinition("const " + fullClassName + "* const", parentClassName + "::get", shortClassName, methodParam, methodCode, true));
         } else if (codeType == CodeLines.CodeType.JAVA) {
             ///  Generate getMethod Definition
             methodCode.add("return " + varName + ";");
@@ -1214,6 +1221,15 @@ public class VariableLengthFieldGenerator {
             methodCode.addAll(getMethodCode);
             methodCode.add("return &" + varName + "[index];");
             code.methods.addAll(CppCode.createMethodDefinition(fullClassName + "* const", parentClassName + "::get", shortClassName, paramCode, methodCode, false));
+            
+            ///  Generate const getMethod Declaration and Definition
+            methodCode.clear();
+            code.publicMethods.add(CppCode.createMethodDeclaration("const " + shortClassName + "* const", "get", shortClassName, paramCode, true));
+            methodCode.add("unsigned int index = " + posCalc + ";");
+            methodCode.add("");
+            methodCode.addAll(getMethodCode);
+            methodCode.add("return &" + varName + "[index];");
+            code.methods.addAll(CppCode.createMethodDefinition("const " + fullClassName + "* const", parentClassName + "::get", shortClassName, paramCode, methodCode, true));
         } else if (codeType == CodeLines.CodeType.JAVA) {
             ///  Generate getMethod Definition
             methodCode.add("int index = (int)" + posCalc + ";");

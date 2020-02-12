@@ -217,6 +217,15 @@ public class BodyGenerator
                 code.methods.addAll(CppCode.createMethodDefinition(fullClassName + "* const", parentClassName + "::get", shortClassName, methodParam, methodCode, false));
 
                 /*
+                 * Generate const getMethod Declaration and Definition
+                 */
+                methodParam.clear();
+                methodCode.clear();
+                code.publicMethods.add(CppCode.createMethodDeclaration("const " + shortClassName + "* const", "get", shortClassName, methodParam, true));
+                methodCode.add("return &" + varName + ";");
+                code.methods.addAll(CppCode.createMethodDefinition("const " + fullClassName + "* const", parentClassName + "::get", shortClassName, methodParam, methodCode, true));
+                
+                /*
                  * Generate setMethod Declaration and Definition
                  */
                 methodParam.clear();
