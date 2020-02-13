@@ -1589,6 +1589,155 @@ public class CppCode
      {
     	 return "setParentPresenceVector();";
      }
+     
+     /**
+      * Add Vector iterator methods such as begin() and end().
+      * @param parentClassName Parent class name
+      * @param shortClassName Short class name
+      * @param pvIndex presence vector index
+      * @param code Code
+      * @param codeType Code tpye
+      */
+     static public void addVectorIteratorMethods(String parentClassName, String shortClassName, int pvIndex, CodeLines code, CodeLines.CodeType codeType) {
+       
+       List<String> methodCode = new ArrayList<String>();
+        List<String> methodParam = new ArrayList<String>();
+
+        String fullClassName = parentClassName + "::" + shortClassName;
+        String varName = CppCode.getVariableName(shortClassName);
+        
+        // For C++11 add typedefs for iterators and references
+        code.publicMethods.add("");
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS) {
+          code.publicMethods.add("typedef std::vector<" + shortClassName + ">::size_type size_type;");
+          code.publicMethods.add("typedef std::vector<" + shortClassName + ">::iterator iterator;");
+          code.publicMethods.add("typedef std::vector<" + shortClassName + ">::const_iterator const_iterator;");
+          code.publicMethods.add("typedef std::vector<" + shortClassName + ">::reference reference;");
+          code.publicMethods.add("typedef std::vector<" + shortClassName + ">::const_reference const_reference;");
+          code.publicMethods.add("typedef std::vector<" + shortClassName + ">::reverse_iterator reverse_iterator;");
+          code.publicMethods.add("typedef std::vector<" + shortClassName + ">::const_reverse_iterator const_reverse_iterator;");
+        } else {
+          code.publicMethods.add("using size_type = std::vector<" + shortClassName + ">::size_type;");
+          code.publicMethods.add("using iterator = std::vector<" + shortClassName + ">::iterator;");
+          code.publicMethods.add("using const_iterator = std::vector<" + shortClassName + ">::const_iterator;");
+          code.publicMethods.add("using reference = std::vector<" + shortClassName + ">::reference;");
+          code.publicMethods.add("using const_reference = std::vector<" + shortClassName + ">::const_reference;");
+          code.publicMethods.add("using reverse_iterator = std::vector<" + shortClassName + ">::reverse_iterator;");
+          code.publicMethods.add("using const_reverse_iterator = std::vector<" + shortClassName + ">::const_reverse_iterator;");
+        }
+        code.publicMethods.add("");
+        
+        // Add the at(index) method
+        methodCode.clear();
+        methodParam.clear();
+        methodParam.add("size_type index");
+        code.publicMethods.add(CppCode.createMethodDeclaration("reference", "at", null, methodParam, false));
+        methodCode.add("return " + varName + ".at(index);");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::reference", parentClassName + "::at", null, methodParam, methodCode, false));
+
+        methodCode.clear();
+        methodParam.clear();
+        methodParam.add("size_type index");
+        code.publicMethods.add(CppCode.createMethodDeclaration("const_reference", "at", null, methodParam, true));
+        methodCode.add("return " + varName + ".at(index);");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::const_reference", parentClassName + "::at", null, methodParam, methodCode, true));
+
+        // Add the back() method
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("reference", "back", null, methodParam, false));
+        methodCode.add("return " + varName + ".back();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::reference", parentClassName + "::back", null, methodParam, methodCode, false));
+
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("const_reference", "back", null, methodParam, true));
+        methodCode.add("return " + varName + ".back();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::const_reference", parentClassName + "::back", null, methodParam, methodCode, true));
+
+        // Add the being() method
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("iterator", "begin", null, methodParam, false));
+        methodCode.add("return " + varName + ".begin();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::iterator", parentClassName + "::begin", null, methodParam, methodCode, false));
+
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("const_iterator", "begin", null, methodParam, true));
+        methodCode.add("return " + varName + ".begin();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::const_iterator", parentClassName + "::begin", null, methodParam, methodCode, true));
+
+        // Add the clear() method
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("void", "clear", null, methodParam, false));
+        methodCode.add(varName + ".clear();");
+        code.methods.addAll(CppCode.createMethodDefinition("void", parentClassName + "::clear", null, methodParam, methodCode, false));
+
+        // Add the empty() method
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("bool", "empty", null, methodParam, true));
+        methodCode.add("return " + varName + ".empty();");
+        code.methods.addAll(CppCode.createMethodDefinition("bool", parentClassName + "::empty", null, methodParam, methodCode, true));
+
+        // Add the end() method
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("iterator", "end", null, methodParam, false));
+        methodCode.add("return " + varName + ".end();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::iterator", parentClassName + "::end", null, methodParam, methodCode, false));
+
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("const_iterator", "end", null, methodParam, true));
+        methodCode.add("return " + varName + ".end();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::const_iterator", parentClassName + "::end", null, methodParam, methodCode, true));
+
+        // Add the front() method
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("reference", "front", null, methodParam, false));
+        methodCode.add("return " + varName + ".front();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::reference", parentClassName + "::front", null, methodParam, methodCode, false));
+
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("const_reference", "front", null, methodParam, true));
+        methodCode.add("return " + varName + ".front();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::const_reference", parentClassName + "::front", null, methodParam, methodCode, true));
+
+        // Add the rbeing() method
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("reverse_iterator", "rbegin", null, methodParam, false));
+        methodCode.add("return " + varName + ".rbegin();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::reverse_iterator", parentClassName + "::rbegin", null, methodParam, methodCode, false));
+
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("const_reverse_iterator", "rbegin", null, methodParam, true));
+        methodCode.add("return " + varName + ".rbegin();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::const_reverse_iterator", parentClassName + "::rbegin", null, methodParam, methodCode, true));
+
+        // Add the rend() method
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("reverse_iterator", "rend", null, methodParam, false));
+        methodCode.add("return " + varName + ".rend();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::reverse_iterator", parentClassName + "::rend", null, methodParam, methodCode, false));
+
+        methodCode.clear();
+        methodParam.clear();
+        code.publicMethods.add(CppCode.createMethodDeclaration("const_reverse_iterator", "rend", null, methodParam, true));
+        methodCode.add("return " + varName + ".rend();");
+        code.methods.addAll(CppCode.createMethodDefinition(parentClassName + "::const_reverse_iterator", parentClassName + "::rend", null, methodParam, methodCode, true));
+
+        methodCode.clear();
+        methodParam.clear();
+     }
+     
 }
 
 

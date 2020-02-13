@@ -636,6 +636,11 @@ public class ListGenerator {
 
         code.decoderLines.addAll(methodCode);
 
+        
+        // For C++11 add iterators and references methods
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+          CppCode.addVectorIteratorMethods(parentClassName, shortClassName, pvIndex, code, codeType);
+        }
 
         /// getNumberOfElements()
         methodCode.clear();

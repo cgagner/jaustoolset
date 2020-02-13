@@ -41,7 +41,7 @@ namespace JTS
 class Message
 {
 public:
-    virtual ~Message(){};
+	virtual ~Message(){};
 	virtual unsigned int getID() const=0;
 	virtual bool isCommand() const { return m_IsCommand; };
 	virtual const unsigned int getSize() const=0;

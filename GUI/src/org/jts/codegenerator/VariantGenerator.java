@@ -984,6 +984,11 @@ public class VariantGenerator
         generateVectorEncodeMethod(code, pvIndex);
         generateVectorDecodeMethod(code, pvIndex);
 
+        // For C++11 add iterators and references methods
+        if (codeType == CodeLines.CodeType.C_PLUS_PLUS_11) {
+          CppCode.addVectorIteratorMethods(parentClassName, shortClassName, pvIndex, code, codeType);
+        }
+        
         generateVectorGetNumberMethod(code);
 
         generateVectorGetMethod(code);
